@@ -1,0 +1,8 @@
+*.userprefs
+*.pidb
+*.user
+*.suo
+_ReSharper*
+packages
+bin
+obj
