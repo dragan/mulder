@@ -45,11 +45,11 @@ or .NET of course, everything else is bootstrapped within the automated build.
 After a fresh clone, navigate into the Mulder project directory and then issue the `sake` command
 to compile and run the tests if you're on a Mac or Linux machine.
 
-    $ ./sake
+    $ ./sake.sh
 
 If you're on Windows, it's the same command without the `./`.
 
-    $ sake
+    $ sake.cmd
 
 ## Roadmap
 
@@ -65,6 +65,6 @@ Mulder is released under the [MIT License][mit-license]. See LICENSE for more in
 [nvie]: http://nvie.com/posts/a-successful-git-branching-model/
 [etiquette]: http://tirania.org/blog/archive/2010/Dec-31.html
 [dont-push]: http://www.igvita.com/2011/12/19/dont-push-your-pull-requests/
-[sake]: https://github.com/loudej/sake/
+[sake]: https://github.com/sakeproject/sake/
 [semver]: http://semver.org/
 [mit-license]: http://www.opensource.org/licenses/mit-license.php
