@@ -7,7 +7,7 @@ using Shouldly;
 
 using Mulder.Base;
 using Mulder.Base.Commands;
-using Mulder.Base.Domain;
+using Mulder.Base.DataSources;
 using Mulder.Base.IO;
 
 namespace Mulder.Tests.Base.Commands
@@ -19,7 +19,7 @@ namespace Mulder.Tests.Base.Commands
 		{
 			StringWriter writer;
 			IFileSystem fileSystem;
-			ISite site;
+			IDataSource dataSource;
 			CreateSiteCommand createSiteCommand;
 			
 			[SetUp]
@@ -27,9 +27,9 @@ namespace Mulder.Tests.Base.Commands
 			{
 				writer = new StringWriter();
 				fileSystem = Substitute.For<IFileSystem>();
-				site = Substitute.For<ISite>();
+				dataSource = Substitute.For<IDataSource>();
 				
-				createSiteCommand = new CreateSiteCommand(writer, fileSystem, site);
+				createSiteCommand = new CreateSiteCommand(writer, fileSystem, dataSource);
 			}
 			
 			[Test]
@@ -54,7 +54,7 @@ namespace Mulder.Tests.Base.Commands
 		{
 			StringWriter writer;
 			IFileSystem fileSystem;
-			ISite site;
+			IDataSource dataSource;
 			CreateSiteCommand createSiteCommand;
 			
 			[SetUp]
@@ -62,9 +62,9 @@ namespace Mulder.Tests.Base.Commands
 			{
 				writer = new StringWriter();
 				fileSystem = Substitute.For<IFileSystem>();
-				site = Substitute.For<ISite>();
+				dataSource = Substitute.For<IDataSource>();
 				
-				createSiteCommand = new CreateSiteCommand(writer, fileSystem, site);
+				createSiteCommand = new CreateSiteCommand(writer, fileSystem, dataSource);
 			}
 			
 			[Test]
@@ -90,7 +90,7 @@ namespace Mulder.Tests.Base.Commands
 			string pathThatAlreadyExists;
 			StringWriter writer;
 			IFileSystem fileSystem;
-			ISite site;
+			IDataSource dataSource;
 			CreateSiteCommand createSiteCommand;
 			
 			[SetUp]
@@ -100,11 +100,11 @@ namespace Mulder.Tests.Base.Commands
 				
 				writer = new StringWriter();
 				fileSystem = Substitute.For<IFileSystem>();
-				site = Substitute.For<ISite>();
+				dataSource = Substitute.For<IDataSource>();
 				
 				fileSystem.DirectoryExists(pathThatAlreadyExists).Returns(true);
 				
-				createSiteCommand = new CreateSiteCommand(writer, fileSystem, site);
+				createSiteCommand = new CreateSiteCommand(writer, fileSystem, dataSource);
 			}
 			
 			[Test]
@@ -138,7 +138,7 @@ namespace Mulder.Tests.Base.Commands
 			string validPath;
 			StringWriter writer;
 			IFileSystem fileSystem;
-			ISite site;
+			IDataSource dataSource;
 			CreateSiteCommand createSiteCommand;
 			
 			[SetUp]
@@ -148,12 +148,12 @@ namespace Mulder.Tests.Base.Commands
 				
 				writer = new StringWriter();
 				fileSystem = Substitute.For<IFileSystem>();
-				site = Substitute.For<ISite>();
+				dataSource = Substitute.For<IDataSource>();
 				
 				fileSystem.DirectoryExists(validPath).Returns(false);
 				fileSystem.ChangeDirectory(validPath, Arg.Invoke());
 				
-				createSiteCommand = new CreateSiteCommand(writer, fileSystem, site);
+				createSiteCommand = new CreateSiteCommand(writer, fileSystem, dataSource);
 			}
 			
 			[Test]
@@ -209,7 +209,7 @@ namespace Mulder.Tests.Base.Commands
 			{
 				createSiteCommand.Execute(new string[] { validPath });
 				
-				site.Received().CreateLayout("/default/", Arg.Any<Stream>());
+				dataSource.Received().CreateLayout("/default/", Arg.Any<Stream>());
 			}
 			
 			[Test]
@@ -217,7 +217,7 @@ namespace Mulder.Tests.Base.Commands
 			{
 				createSiteCommand.Execute(new string[] { validPath });
 				
-				site.Received().CreateItem("/", Arg.Any<Stream>(), Arg.Any<object>());
+				dataSource.Received().CreateItem("/", Arg.Any<Stream>(), Arg.Any<object>());
 			}
 			
 			[Test]
@@ -225,7 +225,7 @@ namespace Mulder.Tests.Base.Commands
 			{
 				createSiteCommand.Execute(new string[] { validPath });
 				
-				site.Received().CreateItem("/stylesheet/", Arg.Any<Stream>(), ".css");
+				dataSource.Received().CreateItem("/stylesheet/", Arg.Any<Stream>(), ".css");
 			}
 			
 			[Test]

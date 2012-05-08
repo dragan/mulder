@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 
-using Mulder.Base.Domain;
+using Mulder.Base.DataSources;
 using Mulder.Base.IO;
 
 namespace Mulder.Base.Commands
@@ -12,15 +12,15 @@ namespace Mulder.Base.Commands
 		static readonly string usage = "create site [path]";
 		readonly TextWriter writer;
 		readonly IFileSystem fileSystem;
-		readonly ISite site;
+		readonly IDataSource dataSource;
 		
 		public string Usage { get { return usage; } }
 		
-		public CreateSiteCommand(TextWriter writer, IFileSystem fileSystem, ISite site)
+		public CreateSiteCommand(TextWriter writer, IFileSystem fileSystem, IDataSource dataSource)
 		{
 			this.writer = writer;
 			this.fileSystem = fileSystem;
-			this.site = site;
+			this.dataSource = dataSource;
 		}
 		
 		public ExitCode Execute(string[] arguments)
@@ -60,15 +60,15 @@ namespace Mulder.Base.Commands
 		void PopulateSite()
 		{
 			using (var resourceStream = GetResourceStreamFromName("DEFAULT_LAYOUT")) {
-				site.CreateLayout("/default/", resourceStream);
+				dataSource.CreateLayout("/default/", resourceStream);
 			}
 			
 			using (var resourceStream = GetResourceStreamFromName("DEFAULT_HOME_PAGE")) {
-				site.CreateItem("/", resourceStream, new { Title = "Home" });
+				dataSource.CreateItem("/", resourceStream, new { Title = "Home" });
 			}
 			
 			using (var resourceStream = GetResourceStreamFromName("DEFAULT_STYLE_SHEET")) {
-				site.CreateItem("/stylesheet/", resourceStream, ".css");
+				dataSource.CreateItem("/stylesheet/", resourceStream, ".css");
 			}
 			
 			fileSystem.CreateDirectory("lib");
