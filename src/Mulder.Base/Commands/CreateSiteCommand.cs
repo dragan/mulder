@@ -59,29 +59,29 @@ namespace Mulder.Base.Commands
 		
 		void PopulateSite()
 		{
-			using (var resourceStream = GetResourceStreamFromName("DEFAULT_LAYOUT")) {
+			using (var resourceStream = GetResourceStreamFromResourceName("DEFAULT_LAYOUT")) {
 				dataSource.CreateLayout("/default/", resourceStream);
 			}
 			
-			using (var resourceStream = GetResourceStreamFromName("DEFAULT_HOME_PAGE")) {
+			using (var resourceStream = GetResourceStreamFromResourceName("DEFAULT_HOME_PAGE")) {
 				dataSource.CreateItem("/", resourceStream, new { Title = "Home" });
 			}
 			
-			using (var resourceStream = GetResourceStreamFromName("DEFAULT_STYLE_SHEET")) {
+			using (var resourceStream = GetResourceStreamFromResourceName("DEFAULT_STYLE_SHEET")) {
 				dataSource.CreateItem("/stylesheet/", resourceStream, ".css");
 			}
 			
 			fileSystem.CreateDirectory("lib");
 		}
 		
-		Stream GetResourceStreamFromName(string resourceName)
+		Stream GetResourceStreamFromResourceName(string resourceName)
 		{
 			return Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
 		}
 		
 		void CreateFileFromResourceName(string resourceName, string path)
 		{
-			using (var resourceStream = GetResourceStreamFromName(resourceName)) {
+			using (var resourceStream = GetResourceStreamFromResourceName(resourceName)) {
 				fileSystem.WriteStreamToFile(path, resourceStream);
 			}
 		}
