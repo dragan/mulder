@@ -20,12 +20,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mulder.Base", "src\Mulder.B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mulder.Tests", "src\Mulder.Tests\Mulder.Tests.csproj", "{6BE40C4A-9B7D-4129-8F3D-B1066D752C60}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mulder.Acceptance.Tests", "src\Mulder.Acceptance.Tests\Mulder.Acceptance.Tests.csproj", "{4425824D-366E-4E0F-84E1-7A22EF93D4B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4425824D-366E-4E0F-84E1-7A22EF93D4B2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4425824D-366E-4E0F-84E1-7A22EF93D4B2}.Debug|x86.Build.0 = Debug|Any CPU
+		{4425824D-366E-4E0F-84E1-7A22EF93D4B2}.Release|x86.ActiveCfg = Release|Any CPU
+		{4425824D-366E-4E0F-84E1-7A22EF93D4B2}.Release|x86.Build.0 = Release|Any CPU
 		{6BE40C4A-9B7D-4129-8F3D-B1066D752C60}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{6BE40C4A-9B7D-4129-8F3D-B1066D752C60}.Debug|x86.Build.0 = Debug|Any CPU
 		{6BE40C4A-9B7D-4129-8F3D-B1066D752C60}.Release|x86.ActiveCfg = Release|Any CPU
