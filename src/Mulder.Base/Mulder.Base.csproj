@@ -44,6 +44,7 @@
     <Compile Include="ExitCode.cs" />
     <Compile Include="Commands\CreateSiteCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="Domain\ISite.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
@@ -51,5 +52,26 @@
     <Folder Include="Properties\" />
     <Folder Include="Commands\" />
     <Folder Include="IO\" />
+    <Folder Include="Resources\" />
+    <Folder Include="Domain\" />
+    <Folder Include="Resources\Layouts\" />
+    <Folder Include="Resources\Content\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Config.yaml">
+      <LogicalName>DEFAULT_CONFIG</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Rules">
+      <LogicalName>DEFAULT_RULES</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Layouts\Default.html">
+      <LogicalName>DEFAULT_LAYOUT</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Content\Index.html">
+      <LogicalName>DEFAULT_HOME_PAGE</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Content\Stylesheet.css">
+      <LogicalName>DEFAULT_STYLE_SHEET</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
