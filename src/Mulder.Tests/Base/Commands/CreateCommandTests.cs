@@ -47,7 +47,7 @@ namespace Mulder.Tests.Base.Commands
 		}
 		
 		[TestFixture]
-		public class when_executing_with_invalid_create_option
+		public class when_executing_with_invalid_sub_command_argument
 		{
 			string invalidArgument;
 			StringWriter writer;
