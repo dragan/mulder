@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 using NSubstitute;
 using NUnit.Framework;
@@ -8,6 +7,7 @@ using Shouldly;
 
 using Mulder.Base;
 using Mulder.Base.Commands;
+using Mulder.Base.Logging;
 
 namespace Mulder.Tests.Base.Commands
 {
@@ -16,25 +16,25 @@ namespace Mulder.Tests.Base.Commands
 		[TestFixture]
 		public class when_executing_with_wrong_number_of_arguments
 		{
-			StringWriter writer;
+			ILog log;
 			IDictionary<string, ICommand> subCommands;
 			CreateCommand createCommand;
 			
 			[SetUp]
 			public void SetUp()
 			{
-				writer = new StringWriter();
+				log = Substitute.For<ILog>();
 				subCommands = Substitute.For<IDictionary<string, ICommand>>();
 				
-				createCommand = new CreateCommand(writer, subCommands);
+				createCommand = new CreateCommand(log, subCommands);
 			}
 			
 			[Test]
-			public void should_write_usage()
+			public void should_log_usage_message()
 			{
 				createCommand.Execute(new string[] {});
 				
-				writer.ToString().ShouldContain("usage: create [site]");
+				log.Received().ErrorMessage("usage: {0}", createCommand.Usage);
 			}
 			
 			[Test]
@@ -50,7 +50,7 @@ namespace Mulder.Tests.Base.Commands
 		public class when_executing_with_invalid_sub_command_argument
 		{
 			string invalidArgument;
-			StringWriter writer;
+			ILog log;
 			IDictionary<string, ICommand> subCommands;
 			CreateCommand createCommand;
 			
@@ -58,20 +58,20 @@ namespace Mulder.Tests.Base.Commands
 			public void SetUp()
 			{
 				invalidArgument = "blah";
-				writer = new StringWriter();
+				log = Substitute.For<ILog>();
 				subCommands = Substitute.For<IDictionary<string, ICommand>>();
 				
 				subCommands.ContainsKey(invalidArgument).Returns(false);
 				
-				createCommand = new CreateCommand(writer, subCommands);
+				createCommand = new CreateCommand(log, subCommands);
 			}
 			
 			[Test]
-			public void should_write_usage()
+			public void should_log_usage_message()
 			{
 				createCommand.Execute(new string[] { invalidArgument });
 				
-				writer.ToString().ShouldContain("usage: create [site]");
+				log.Received().ErrorMessage("usage: {0}", createCommand.Usage);
 			}
 			
 			[Test]
@@ -89,7 +89,7 @@ namespace Mulder.Tests.Base.Commands
 			string subCommandArgument;
 			string additionalArgument;
 			ICommand subCommand;
-			StringWriter writer;
+			ILog log;
 			IDictionary<string, ICommand> subCommands;
 			CreateCommand createCommand;
 			
@@ -102,13 +102,13 @@ namespace Mulder.Tests.Base.Commands
 				subCommand = Substitute.For<ICommand>();
 				subCommand.Execute(Arg.Any<string[]>()).Returns(ExitCode.Success);
 				
-				writer = new StringWriter();
+				log = Substitute.For<ILog>();
 				
 				subCommands = Substitute.For<IDictionary<string, ICommand>>();
 				subCommands.ContainsKey(subCommandArgument).Returns(true);
 				subCommands[subCommandArgument] = subCommand;
 				
-				createCommand = new CreateCommand(writer, subCommands);
+				createCommand = new CreateCommand(log, subCommands);
 			}
 			
 			[Test]

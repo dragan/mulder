@@ -9,6 +9,7 @@ using Mulder.Base;
 using Mulder.Base.Commands;
 using Mulder.Base.DataSources;
 using Mulder.Base.IO;
+using Mulder.Base.Logging;
 
 namespace Mulder.Tests.Base.Commands
 {
@@ -17,7 +18,7 @@ namespace Mulder.Tests.Base.Commands
 		[TestFixture]
 		public class when_executing_with_wrong_number_of_arguments
 		{
-			StringWriter writer;
+			ILog log;
 			IFileSystem fileSystem;
 			IDataSource dataSource;
 			CreateSiteCommand createSiteCommand;
@@ -25,19 +26,19 @@ namespace Mulder.Tests.Base.Commands
 			[SetUp]
 			public void SetUp()
 			{
-				writer = new StringWriter();
+				log = Substitute.For<ILog>();
 				fileSystem = Substitute.For<IFileSystem>();
 				dataSource = Substitute.For<IDataSource>();
 				
-				createSiteCommand = new CreateSiteCommand(writer, fileSystem, dataSource);
+				createSiteCommand = new CreateSiteCommand(log, fileSystem, dataSource);
 			}
 			
 			[Test]
-			public void should_write_usage()
+			public void should_log_usage_message()
 			{
 				createSiteCommand.Execute(new string[] {});
 				
-				writer.ToString().ShouldContain("usage: create site [path]");
+				log.Received().ErrorMessage("usage: {0}", createSiteCommand.Usage);
 			}
 			
 			[Test]
@@ -52,7 +53,7 @@ namespace Mulder.Tests.Base.Commands
 		[TestFixture]
 		public class when_executing_with_empty_string_for_path
 		{
-			StringWriter writer;
+			ILog log;
 			IFileSystem fileSystem;
 			IDataSource dataSource;
 			CreateSiteCommand createSiteCommand;
@@ -60,19 +61,19 @@ namespace Mulder.Tests.Base.Commands
 			[SetUp]
 			public void SetUp()
 			{
-				writer = new StringWriter();
+				log = Substitute.For<ILog>();
 				fileSystem = Substitute.For<IFileSystem>();
 				dataSource = Substitute.For<IDataSource>();
 				
-				createSiteCommand = new CreateSiteCommand(writer, fileSystem, dataSource);
+				createSiteCommand = new CreateSiteCommand(log, fileSystem, dataSource);
 			}
 			
 			[Test]
-			public void should_write_usage()
+			public void should_log_usage_message()
 			{
 				createSiteCommand.Execute(new string[] { "" });
 				
-				writer.ToString().ShouldContain("usage: create site [path]");
+				log.Received().ErrorMessage("usage: {0}", createSiteCommand.Usage);
 			}
 			
 			[Test]
@@ -88,7 +89,7 @@ namespace Mulder.Tests.Base.Commands
 		public class when_creating_a_site_with_a_path_that_already_exists
 		{
 			string pathThatAlreadyExists;
-			StringWriter writer;
+			ILog log;
 			IFileSystem fileSystem;
 			IDataSource dataSource;
 			CreateSiteCommand createSiteCommand;
@@ -96,15 +97,15 @@ namespace Mulder.Tests.Base.Commands
 			[SetUp]
 			public void SetUp()
 			{
-				pathThatAlreadyExists = string.Format("path{0}that{0}already{0}exists", Path.DirectorySeparatorChar);
+				pathThatAlreadyExists = Path.Combine("path", "that", "already", "exists");
 				
-				writer = new StringWriter();
+				log = Substitute.For<ILog>();
 				fileSystem = Substitute.For<IFileSystem>();
 				dataSource = Substitute.For<IDataSource>();
 				
 				fileSystem.DirectoryExists(pathThatAlreadyExists).Returns(true);
 				
-				createSiteCommand = new CreateSiteCommand(writer, fileSystem, dataSource);
+				createSiteCommand = new CreateSiteCommand(log, fileSystem, dataSource);
 			}
 			
 			[Test]
@@ -116,11 +117,11 @@ namespace Mulder.Tests.Base.Commands
 			}
 			
 			[Test]
-			public void should_write_that_path_already_exists()
+			public void should_log_that_path_already_exists()
 			{
 				createSiteCommand.Execute(new string[] { pathThatAlreadyExists });
 				
-				writer.ToString().ShouldContain(string.Format("A site at '{0}' already exists.", pathThatAlreadyExists));
+				log.Received().ErrorMessage("A site at '{0}' already exists.", pathThatAlreadyExists);
 			}
 			
 			[Test]
@@ -136,7 +137,7 @@ namespace Mulder.Tests.Base.Commands
 		public class when_creating_a_site_with_a_valid_path
 		{
 			string validPath;
-			StringWriter writer;
+			ILog log;
 			IFileSystem fileSystem;
 			IDataSource dataSource;
 			CreateSiteCommand createSiteCommand;
@@ -144,16 +145,16 @@ namespace Mulder.Tests.Base.Commands
 			[SetUp]
 			public void SetUp()
 			{
-				validPath = string.Format("some{0}valid{0}path", Path.DirectorySeparatorChar);
+				validPath = Path.Combine("some", "valid", "path");
 				
-				writer = new StringWriter();
+				log = Substitute.For<ILog>();
 				fileSystem = Substitute.For<IFileSystem>();
 				dataSource = Substitute.For<IDataSource>();
 				
 				fileSystem.DirectoryExists(validPath).Returns(false);
 				fileSystem.ChangeDirectory(validPath, Arg.Invoke());
 				
-				createSiteCommand = new CreateSiteCommand(writer, fileSystem, dataSource);
+				createSiteCommand = new CreateSiteCommand(log, fileSystem, dataSource);
 			}
 			
 			[Test]
@@ -181,11 +182,11 @@ namespace Mulder.Tests.Base.Commands
 			}
 			
 			[Test]
-			public void should_write_config_file_created()
+			public void should_log_config_file_created()
 			{
 				createSiteCommand.Execute(new string[] { validPath });
 				
-				writer.ToString().ShouldContain("create config.yaml");
+				log.Received().InfoMessage("\tcreate config.yaml");
 			}
 			
 			[Test]
@@ -197,11 +198,11 @@ namespace Mulder.Tests.Base.Commands
 			}
 			
 			[Test]
-			public void should_write_rules_file_created()
+			public void should_log_rules_file_created()
 			{
 				createSiteCommand.Execute(new string[] { validPath });
 				
-				writer.ToString().ShouldContain("create Rules");
+				log.Received().InfoMessage("\tcreate Rules");
 			}
 			
 			[Test]
@@ -237,11 +238,11 @@ namespace Mulder.Tests.Base.Commands
 			}
 			
 			[Test]
-			public void should_write_site_created_message()
+			public void should_log_site_created_message()
 			{
 				createSiteCommand.Execute(new string[] { validPath });
 				
-				writer.ToString().ShouldContain(string.Format("Created a blank mulder site at '{0}'. Enjoy!", validPath));
+				log.Received().InfoMessage("Created a blank mulder site at '{0}'. Enjoy!", validPath);
 			}
 		}
 	}

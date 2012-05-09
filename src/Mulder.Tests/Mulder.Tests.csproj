@@ -50,6 +50,7 @@
     </Compile>
     <Compile Include="Base\Commands\CreateCommandTests.cs" />
     <Compile Include="Base\Commands\CreateSiteCommandTests.cs" />
+    <Compile Include="Base\Logging\LogTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
@@ -63,6 +64,7 @@
     <Folder Include="Properties\" />
     <Folder Include="Base\" />
     <Folder Include="Base\Commands\" />
+    <Folder Include="Base\Logging\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

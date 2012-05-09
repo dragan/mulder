@@ -4,21 +4,22 @@ using System.Reflection;
 
 using Mulder.Base.DataSources;
 using Mulder.Base.IO;
+using Mulder.Base.Logging;
 
 namespace Mulder.Base.Commands
 {
 	public class CreateSiteCommand : ICommand
 	{
 		static readonly string usage = "create site [path]";
-		readonly TextWriter writer;
+		readonly ILog log;
 		readonly IFileSystem fileSystem;
 		readonly IDataSource dataSource;
 		
 		public string Usage { get { return usage; } }
 		
-		public CreateSiteCommand(TextWriter writer, IFileSystem fileSystem, IDataSource dataSource)
+		public CreateSiteCommand(ILog log, IFileSystem fileSystem, IDataSource dataSource)
 		{
-			this.writer = writer;
+			this.log = log;
 			this.fileSystem = fileSystem;
 			this.dataSource = dataSource;
 		}
@@ -26,13 +27,13 @@ namespace Mulder.Base.Commands
 		public ExitCode Execute(string[] arguments)
 		{
 			if (arguments.Length != 1 || string.IsNullOrEmpty(arguments[0])) {
-				writer.WriteLine("usage: {0}", Usage);
+				log.ErrorMessage("usage: {0}", Usage);
 				return ExitCode.Error;
 			}
 			
 			string path = arguments[0];
 			if (fileSystem.DirectoryExists(path)) {
-				writer.WriteLine("A site at '{0}' already exists.", path);
+				log.ErrorMessage("A site at '{0}' already exists.", path);
 				return ExitCode.Error;
 			}
 			
@@ -43,7 +44,7 @@ namespace Mulder.Base.Commands
 				PopulateSite();
 			});
 			
-			writer.WriteLine("Created a blank mulder site at '{0}'. Enjoy!", path);
+			log.InfoMessage("Created a blank mulder site at '{0}'. Enjoy!", path);
 			
 			return ExitCode.Success;
 		}
@@ -51,10 +52,10 @@ namespace Mulder.Base.Commands
 		void CreateMinimalSite()
 		{
 			CreateFileFromResourceName("DEFAULT_CONFIG", "config.yaml");
-			writer.WriteLine("\tcreate config.yaml");
+			log.InfoMessage("\tcreate config.yaml");
 			
 			CreateFileFromResourceName("DEFAULT_RULES", "Rules");
-			writer.WriteLine("\tcreate Rules");
+			log.InfoMessage("\tcreate Rules");
 		}
 		
 		void PopulateSite()
