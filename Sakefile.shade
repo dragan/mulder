@@ -31,7 +31,7 @@ var BIN_DIR = "${ARTIFACTS_DIR}/bin"
   nunit testFile="${OUTPUT_DIR}/Mulder.Tests.dll" extra="-xml=${OUTPUT_DIR}/TestResults.xml" nunitVersion="2.5.10.11092"
 
 #acceptance-test .build
-  nunit testFile="${OUTPUT_DIR}/Mulder.Acceptance.Tests.dll" extra="-xml=${OUTPUT_DIR}/AcceptanceTestResults.xml" nunitVersion="2.5.10.11092"
+  nunit testFile="${OUTPUT_DIR}/Mulder.Acceptance.Tests.dll" extra="-nodots -xml=${OUTPUT_DIR}/AcceptanceTestResults.xml" nunitVersion="2.5.10.11092"
 
 #merge
   @{

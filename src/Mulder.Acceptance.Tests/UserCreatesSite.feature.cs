@@ -73,7 +73,9 @@ this.ScenarioSetup(scenarioInfo);
 #line 7
  testRunner.When("I run the create site command without a path");
 #line 8
- testRunner.Then("I should see \"usage: create site [path]\" message");
+ testRunner.Then("I should see usage message");
+#line 9
+ testRunner.And("I should see mulder terminate with an error exit code");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -83,14 +85,16 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void CreateSiteWithPathThatAlreadyExists()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("create site with path that already exists", ((string[])(null)));
-#line 10
-this.ScenarioSetup(scenarioInfo);
 #line 11
- testRunner.Given("I have a path that already exists");
+this.ScenarioSetup(scenarioInfo);
 #line 12
- testRunner.When("I run the create site command with a path that already exists");
+ testRunner.Given("I have a path that already exists");
 #line 13
+ testRunner.When("I run the create site command with a path that already exists");
+#line 14
  testRunner.Then("I should see \"A site at '[path]' already exists.\" message");
+#line 15
+ testRunner.And("I should see mulder terminate with an error exit code due to path existing");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -100,40 +104,40 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void CreateSiteWithValidPath()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("create site with valid path", ((string[])(null)));
-#line 15
-this.ScenarioSetup(scenarioInfo);
-#line 16
- testRunner.Given("I have a valid path");
 #line 17
- testRunner.When("I run the create site command with a valid path");
+this.ScenarioSetup(scenarioInfo);
 #line 18
- testRunner.Then("I should see \"create config.yaml\" message");
+ testRunner.Given("I have a valid path");
 #line 19
- testRunner.And("I should see \"create Rules\" message");
+ testRunner.When("I run the create site command with a valid path");
 #line 20
- testRunner.And("I should see \"create layouts/default.html\" message");
+ testRunner.Then("I should see \"create config.yaml\" message");
 #line 21
- testRunner.And("I should see \"create content/index.html\" message");
+ testRunner.And("I should see \"create Rules\" message");
 #line 22
- testRunner.And("I should see \"create content/stylesheet.css\" message");
+ testRunner.And("I should see \"create layouts/default.html\" message");
 #line 23
- testRunner.And("I should see \"Created a blank mulder site at '[path]'. Enjoy!\" message");
+ testRunner.And("I should see \"create content/index.html\" message");
 #line 24
- testRunner.And("I should have a directory created for my site");
+ testRunner.And("I should see \"create content/stylesheet.css\" message");
 #line 25
- testRunner.And("I should have my site directory populated with the default bare-bones site");
+ testRunner.And("I should see \"Created a blank mulder site at '[path]'. Enjoy!\" message");
 #line 26
- testRunner.And("the config.yaml file should contain the default config");
+ testRunner.And("I should have a directory created for my site");
 #line 27
- testRunner.And("the Rules file should contain the default Rules");
+ testRunner.And("I should have my site directory populated with the default bare-bones site");
 #line 28
- testRunner.And("the default.html file should contain the default layout");
+ testRunner.And("the \"config.yaml\" file should contain the default config");
 #line 29
- testRunner.And("the index.html file should contain the default content");
+ testRunner.And("the \"Rules\" file should contain the default rules");
 #line 30
- testRunner.And("the stylesheet.css file should contain the default styles");
+ testRunner.And("the \"layouts/default.html\" file should contain the default layout");
 #line 31
- testRunner.And("mulder should terminate successfully");
+ testRunner.And("the \"content/index.html\" file should contain the default content");
+#line 32
+ testRunner.And("the \"content/stylesheet.css\" file should contain the default styles");
+#line 33
+ testRunner.And("mulder should terminate with an success exit code");
 #line hidden
             this.ScenarioCleanup();
         }

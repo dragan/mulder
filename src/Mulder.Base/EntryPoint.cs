@@ -14,7 +14,7 @@ namespace Mulder.Base
 			this.log = log;
 		}
 		
-		public ExitCode Run()
+		public ExitCode Run(string[] arguments)
 		{
 			log.InfoMessage("The Truth Is Out There");
 			

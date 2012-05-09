@@ -28,7 +28,7 @@ namespace Mulder.Tests.Base
 			[Test]
 			public void should_log_truth_is_out_there_message()
 			{
-				entryPoint.Run();
+				entryPoint.Run(new string[] {});
 				
 				log.Received().InfoMessage("The Truth Is Out There");
 			}
@@ -36,7 +36,7 @@ namespace Mulder.Tests.Base
 			[Test]
 			public void should_return_success_exit_code()
 			{
-				ExitCode exitCode = entryPoint.Run();
+				ExitCode exitCode = entryPoint.Run(new string[] {});
 				
 				exitCode.ShouldBe(ExitCode.Success);
 			}
