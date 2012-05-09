@@ -47,6 +47,7 @@
     <Compile Include="DataSources\IDataSource.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\Log.cs" />
+    <Compile Include="EntryPoint.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />

@@ -51,6 +51,7 @@
     <Compile Include="Base\Commands\CreateCommandTests.cs" />
     <Compile Include="Base\Commands\CreateSiteCommandTests.cs" />
     <Compile Include="Base\Logging\LogTests.cs" />
+    <Compile Include="Base\EntryPointTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
