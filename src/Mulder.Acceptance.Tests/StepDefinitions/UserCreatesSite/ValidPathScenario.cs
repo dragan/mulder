@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
 using Shouldly;
 using TechTalk.SpecFlow;
@@ -118,31 +119,41 @@ namespace Mulder.Acceptance.Tests.StepDefinitions.UserCreatesSite
 		[Then(@"the ""config\.yaml"" file should contain the default config")]
 		public void Then_the_config_yaml_file_should_contain_the_default_config()
 		{
-			File.ReadAllText(Path.Combine(validPath, "config.yaml")).ShouldBe(DefaultSite.ConfigContent);
+			string defaultConfigContent = GetStringFromResourceName("TEST_DEFAULT_CONFIG");
+			
+			File.ReadAllText(Path.Combine(validPath, "config.yaml")).ShouldBe(defaultConfigContent);
 		}
 		
 		[Then(@"the ""Rules"" file should contain the default rules")]
 		public void Then_the_rules_file_should_contain_the_default_rules()
 		{
-			File.ReadAllText(Path.Combine(validPath, "Rules")).ShouldBe(DefaultSite.RulesContent);
+			string defaultRulesContent = GetStringFromResourceName("TEST_DEFAULT_RULES");
+			
+			File.ReadAllText(Path.Combine(validPath, "Rules")).ShouldBe(defaultRulesContent);
 		}
 		
 		[Then(@"the ""layouts/default\.html"" file should contain the default layout")]
 		public void Then_the_layouts_default_html_file_should_contain_the_default_layout()
 		{
-			File.ReadAllText(Path.Combine(validPath, "layouts", "default.html")).ShouldBe(DefaultSite.LayoutHtml);
+			string defaultLayoutHtml = GetStringFromResourceName("TEST_DEFAULT_LAYOUT");
+			
+			File.ReadAllText(Path.Combine(validPath, "layouts", "default.html")).ShouldBe(defaultLayoutHtml);
 		}
 		
 		[Then(@"the ""content/index\.html"" file should contain the default content")]
-		public void Then_the_content_index__html_file_should_contain_the_default_content()
+		public void Then_the_content_index_html_file_should_contain_the_default_content()
 		{
-			File.ReadAllText(Path.Combine(validPath, "content", "index.html")).ShouldBe(DefaultSite.HomePageHtml);
+			string defaultHomePageHtml = GetStringFromResourceName("TEST_DEFAULT_HOME_PAGE");
+			
+			File.ReadAllText(Path.Combine(validPath, "content", "index.html")).ShouldBe(defaultHomePageHtml);
 		}
 		
 		[Then(@"the ""content/stylesheet\.css"" file should contain the default styles")]
 		public void Then_the_content_stylesheet_css_file_should_contain_the_default_styles()
 		{
-			File.ReadAllText(Path.Combine(validPath, "content", "stylesheet.css")).ShouldBe(DefaultSite.StylesheetCss);
+			string defaultStylesheetCss = GetStringFromResourceName("TEST_DEFAULT_STYLE_SHEET");
+			
+			File.ReadAllText(Path.Combine(validPath, "content", "stylesheet.css")).ShouldBe(defaultStylesheetCss);
 		}
 		
 		[Then(@"mulder should terminate with an success exit code")]
@@ -150,102 +161,14 @@ namespace Mulder.Acceptance.Tests.StepDefinitions.UserCreatesSite
 		{
 			exitCode.ShouldBe(ExitCode.Success);
 		}
-	}
-	
-	public static class DefaultSite
-	{
-		public static readonly string ConfigContent = @"# A configuration file allowing you to change Mulder's conventions
-
-# The path to the directory where all generated files will be written to. This
-# can be an absolute path starting with a slash, but it can also be path
-# relative to the site directory.
-output_directory: public
-
-# A list of file extensions that Mulder will consider to be textual rather than
-# binary. If an item with an extension not in this list is found,  the file
-# will be considered as binary.
-text_extensions: [ 'htm', 'html', 'css', 'liquid', 'js', 'less', 'markdown', 'md', 'txt', 'xhtml', 'xml' ]
-
-# A list of index filenames, i.e. names of files that will be served by a web
-# server when a directory is requested. Usually, index files are named
-# “index.html”, but depending on the web server, this may be something else,
-# such as “default.htm”. This list is used by Mulder to generate pretty URLs.
-index_filenames: [ 'index.html' ]
-
-# The data sources where Mulder loads its data from. This is an array of
-# hashes; each array element represents a single data source. By default,
-# there is only a single data source that reads data from the “content/” and
-# “layout/” directories in the site directory.
-data_sources:
-  -
-    # The type is the identifier of the data source. By default, this will be
-    # `filesystem_unified`.
-    type: filesystem_unified
-
-    # The path where items should be mounted (comparable to mount points in
-    # Unix-like systems). This is “/” by default, meaning that items will have
-    # “/” prefixed to their identifiers. If the items root were “/en/”
-    # instead, an item at content/about.html would have an identifier of
-    # “/en/about/” instead of just “/about/”.
-    items_root: /
-
-    # The path where layouts should be mounted. The layouts root behaves the
-    # same as the items root, but applies to layouts rather than items.
-    layouts_root: /
-";
 		
-		public static readonly string RulesContent = @"// Not sure how this is going to look yet, could be a C# or Shade file
-";
-		
-		public static readonly string LayoutHtml = @"<!DOCTYPE HTML>
-<html lang=""en"">
-	<head>
-		<meta charset=""utf-8"">
-		<title>Mulder Generated Site - {{ item.title }}</title>
-		<link rel=""stylesheet"" type=""text/css"" href=""/style.css"" media=""screen"">
-	</head>
-	<body>
-		<div id=""main"">
-			{{ content }}
-		</div>
-	</body>
-</html>
-";
-		
-		public static readonly string HomePageHtml = @"---
-title: Home
----
-
-<h1>The Truth Is Out There</h1>
-
-<p>You’ve just created a new site using Mulder. The page you are looking at right now is the home page for your site. To get started, consider replacing this default homepage with your own customized homepage. Some pointers on how to do so:</p>
-
-<ul>
-	<li><strong>Change this page’s content</strong> by editing the “index.html” file in the “content” directory. This is the actual page content, and therefore doesn’t include the header or style information (those are part of the layout).</li>
-	<li><strong>Change the layout</strong>, which is the “default.html” file in the “layouts” directory, and create something unique (and hopefully less bland).</li>
-</ul>
-";
-		
-		public static readonly string StylesheetCss = @"body {
-  margin: 0;
-  padding: 0;
-  font-family: ""Palatino Linotype"",""Book Antiqua"",Palatino,serif;
-  font-size: 100%;
-}
-
-a {
-  color: #227CE8;
-}
-
-a:hover {
-  color: #F70;
-  text-decoration: none;
-}
-
-#main {
-	width: 42em;
-	margin: 0 auto;
-}
-";
+		string GetStringFromResourceName(string resourceName)
+		{
+			var assembly = Assembly.GetExecutingAssembly();
+			
+			using (var resourceStreamReader = new StreamReader(assembly.GetManifestResourceStream(resourceName))) {
+				return resourceStreamReader.ReadToEnd();
+			}
+		}
 	}
 }

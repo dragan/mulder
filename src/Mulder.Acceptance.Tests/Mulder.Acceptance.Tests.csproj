@@ -64,6 +64,10 @@
     <Folder Include="Properties\" />
     <Folder Include="StepDefinitions\" />
     <Folder Include="StepDefinitions\UserCreatesSite\" />
+    <Folder Include="Resources\" />
+    <Folder Include="Resources\DefaultSite\" />
+    <Folder Include="Resources\DefaultSite\Content\" />
+    <Folder Include="Resources\DefaultSite\Layouts\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -77,5 +81,22 @@
       <Project>{E3F2876A-06C9-4EFD-ADF8-2904B535D687}</Project>
       <Name>Mulder.Base</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\DefaultSite\Content\Index.html">
+      <LogicalName>TEST_DEFAULT_HOME_PAGE</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\DefaultSite\Content\Stylesheet.css">
+      <LogicalName>TEST_DEFAULT_STYLE_SHEET</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\DefaultSite\Layouts\Default.html">
+      <LogicalName>TEST_DEFAULT_LAYOUT</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\DefaultSite\Config.yaml">
+      <LogicalName>TEST_DEFAULT_CONFIG</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\DefaultSite\Rules">
+      <LogicalName>TEST_DEFAULT_RULES</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
