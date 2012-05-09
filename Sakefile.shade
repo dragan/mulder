@@ -28,10 +28,14 @@ var BIN_DIR = "${ARTIFACTS_DIR}/bin"
   build projectFile="Mulder.sln" outputDir="${OUTPUT_DIR}" configuration="${CONFIGURATION}"
 
 #test .build
-  nunit testFile="${OUTPUT_DIR}/Mulder.Tests.dll" extra="-xml=${OUTPUT_DIR}/TestResults.xml" nunitVersion="2.5.10.11092"
+  nunit testFile="${OUTPUT_DIR}/Mulder.Tests.dll" extra="-labels -xml=${OUTPUT_DIR}/TestResults.xml" nunitVersion="2.5.10.11092"
 
-#acceptance-test .build
-  nunit testFile="${OUTPUT_DIR}/Mulder.Acceptance.Tests.dll" extra="-nodots -xml=${OUTPUT_DIR}/AcceptanceTestResults.xml" nunitVersion="2.5.10.11092"
+#test-acceptance .build
+  nunit testFile="${OUTPUT_DIR}/Mulder.Acceptance.Tests.dll" extra="-nodots -labels -xml=${OUTPUT_DIR}/AcceptanceTestResults.xml" nunitVersion="2.5.10.11092"
+
+  exec-clr program="packages/SpecFlow.1.8.1/tools/specflow.exe" commandline="nunitexecutionreport src/Mulder.Acceptance.Tests/Mulder.Acceptance.Tests.csproj /xmlTestResult:${OUTPUT_DIR}/AcceptanceTestResults.xml /out:${OUTPUT_DIR}/AcceptanceTestResults.html"
+
+#test-all .test .test-acceptance
 
 #merge
   @{
