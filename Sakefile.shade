@@ -39,7 +39,8 @@ var BIN_DIR = "${ARTIFACTS_DIR}/bin"
       .Where(path => !Regex.Match(path, "nunit").Success)
       .Where(path => !Regex.Match(path, ".Tests").Success)
       .Where(path => !Regex.Match(path, "NSubstitute").Success)
-      .Where(path => !Regex.Match(path, "Shouldly").Success));
+      .Where(path => !Regex.Match(path, "Shouldly").Success)
+      .Where(path => !Regex.Match(path, "TechTalk").Success));
     
     for (int i = 0; i < assemblies.Count; i++)
       assemblies[i] = OUTPUT_DIR + "/" + assemblies[i];
