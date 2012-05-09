@@ -52,6 +52,10 @@
     <Compile Include="Base\Commands\CreateSiteCommandTests.cs" />
     <Compile Include="Base\Logging\LogTests.cs" />
     <Compile Include="Base\EntryPointTests.cs" />
+    <Compile Include="Base\IO\FileSystemTests.cs" />
+    <Compile Include="Base\DataSources\FileSystemUnifiedTests.cs" />
+    <Compile Include="Base\Extensions\AnonymousTypeExtensionsTests.cs" />
+    <Compile Include="Base\Extensions\YamlExtensionsTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
@@ -66,6 +70,9 @@
     <Folder Include="Base\" />
     <Folder Include="Base\Commands\" />
     <Folder Include="Base\Logging\" />
+    <Folder Include="Base\IO\" />
+    <Folder Include="Base\DataSources\" />
+    <Folder Include="Base\Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

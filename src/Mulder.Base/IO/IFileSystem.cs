@@ -5,9 +5,9 @@ namespace Mulder.Base.IO
 {
 	public interface IFileSystem
 	{
-		bool DirectoryExists(string directory);
-		void CreateDirectory(string directory);
-		void ChangeDirectory(string directory, Action action);
+		bool DirectoryExists(string path);
+		void CreateDirectory(string path);
+		void ChangeDirectory(string path, Action action);
 		void WriteStreamToFile(string filename, Stream stream);
 	}
 }

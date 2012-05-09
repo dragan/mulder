@@ -48,6 +48,10 @@
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="EntryPoint.cs" />
+    <Compile Include="DataSources\FileSystemUnified.cs" />
+    <Compile Include="IO\FileSystem.cs" />
+    <Compile Include="Extensions\AnonymousTypeExtensions.cs" />
+    <Compile Include="Extensions\YamlExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
@@ -60,6 +64,7 @@
     <Folder Include="Resources\Content\" />
     <Folder Include="DataSources\" />
     <Folder Include="Logging\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Config.yaml">
