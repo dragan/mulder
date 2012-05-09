@@ -25,10 +25,7 @@ namespace Mulder.Tests.Base.Extensions
 					{ "Property3", "3" }
 				};
 			
-				expectedYaml = @"property1: 1
-property2: 2
-property3: 3
-";
+				expectedYaml = string.Format("property1: 1{0}property2: 2{0}property3: 3{0}", Environment.NewLine);
 			}
 			
 			[Test]
@@ -55,12 +52,7 @@ property3: 3
 					{ "Property3", "3" }
 				};
 			
-				expectedHeader = @"---
-property1: 1
-property2: 2
-property3: 3
----
-";
+				expectedHeader = string.Format("---{0}property1: 1{0}property2: 2{0}property3: 3{0}---{0}", Environment.NewLine);
 			}
 			
 			[Test]
