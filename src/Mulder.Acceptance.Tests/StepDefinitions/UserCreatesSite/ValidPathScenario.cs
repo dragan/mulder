@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 using Shouldly;
 using TechTalk.SpecFlow;
@@ -17,6 +18,8 @@ namespace Mulder.Acceptance.Tests.StepDefinitions.UserCreatesSite
 	[Binding]
     public class ValidPathScenario
 	{
+		Regex regex;
+		
 		string tempTestPath;
 		string validPath;
 		StringWriter writer;
@@ -26,6 +29,8 @@ namespace Mulder.Acceptance.Tests.StepDefinitions.UserCreatesSite
 		[BeforeScenario]
 		public void BeforeScenario()
 		{
+			regex = new Regex(@"(\t|\r\n|\r|\n)+");
+			
 			tempTestPath = Path.Combine(Path.GetTempPath(), "mulder-acceptance-test-files");
 			CreateTestFiles();
 			
@@ -135,41 +140,46 @@ namespace Mulder.Acceptance.Tests.StepDefinitions.UserCreatesSite
 		[Then(@"the ""config\.yaml"" file should contain the default config")]
 		public void Then_the_config_yaml_file_should_contain_the_default_config()
 		{
-			string defaultConfigContent = File.ReadAllText(Path.Combine(tempTestPath, "config.yaml"));
+			string expectedDefaultConfigContent = regex.Replace(File.ReadAllText(Path.Combine(tempTestPath, "config.yaml")), "");
+			string actualDefaultConfigContent = regex.Replace(File.ReadAllText(Path.Combine(validPath, "config.yaml")), "");
 			
-			File.ReadAllText(Path.Combine(validPath, "config.yaml")).ShouldBe(defaultConfigContent);
+			actualDefaultConfigContent.ShouldBe(expectedDefaultConfigContent);
 		}
 		
 		[Then(@"the ""Rules"" file should contain the default rules")]
 		public void Then_the_rules_file_should_contain_the_default_rules()
 		{
-			string defaultRulesContent = File.ReadAllText(Path.Combine(tempTestPath, "Rules"));
+			string expectedDefaultRulesContent = regex.Replace(File.ReadAllText(Path.Combine(tempTestPath, "Rules")), "");
+			string actualDefaultRulesContent = regex.Replace(File.ReadAllText(Path.Combine(validPath, "Rules")), "");
 			
-			File.ReadAllText(Path.Combine(validPath, "Rules")).ShouldBe(defaultRulesContent);
+			actualDefaultRulesContent.ShouldBe(expectedDefaultRulesContent);
 		}
 		
 		[Then(@"the ""layouts/default\.html"" file should contain the default layout")]
 		public void Then_the_layouts_default_html_file_should_contain_the_default_layout()
 		{
-			string defaultLayoutHtml = File.ReadAllText(Path.Combine(tempTestPath, "default.html"));
+			string expectedDefaultLayoutHtml = regex.Replace(File.ReadAllText(Path.Combine(tempTestPath, "default.html")), "");
+			string actualDefaultLayoutHtml = regex.Replace(File.ReadAllText(Path.Combine(validPath, "layouts", "default.html")), "");
 			
-			File.ReadAllText(Path.Combine(validPath, "layouts", "default.html")).ShouldBe(defaultLayoutHtml);
+			actualDefaultLayoutHtml.ShouldBe(expectedDefaultLayoutHtml);
 		}
 		
 		[Then(@"the ""content/index\.html"" file should contain the default content")]
 		public void Then_the_content_index_html_file_should_contain_the_default_content()
 		{
-			string defaultHomePageHtml = File.ReadAllText(Path.Combine(tempTestPath, "index.html"));
+			string expectedDefaultHomePageHtml = regex.Replace(File.ReadAllText(Path.Combine(tempTestPath, "index.html")), "");
+			string actualDefaultHomePageHtml = regex.Replace(File.ReadAllText(Path.Combine(validPath, "content", "index.html")), "");
 			
-			File.ReadAllText(Path.Combine(validPath, "content", "index.html")).ShouldBe(defaultHomePageHtml);
+			actualDefaultHomePageHtml.ShouldBe(expectedDefaultHomePageHtml);
 		}
 		
 		[Then(@"the ""content/stylesheet\.css"" file should contain the default styles")]
 		public void Then_the_content_stylesheet_css_file_should_contain_the_default_styles()
 		{
-			string defaultStylesheetCss = File.ReadAllText(Path.Combine(tempTestPath, "stylesheet.css"));
+			string expectedDefaultStylesheetCss = regex.Replace(File.ReadAllText(Path.Combine(tempTestPath, "stylesheet.css")), "");
+			string actualDefaultStylesheetCss = regex.Replace(File.ReadAllText(Path.Combine(validPath, "content", "stylesheet.css")), "");
 			
-			File.ReadAllText(Path.Combine(validPath, "content", "stylesheet.css")).ShouldBe(defaultStylesheetCss);
+			actualDefaultStylesheetCss.ShouldBe(expectedDefaultStylesheetCss);
 		}
 		
 		[Then(@"mulder should terminate with an success exit code")]
