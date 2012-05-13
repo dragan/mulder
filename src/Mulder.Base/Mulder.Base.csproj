@@ -52,6 +52,7 @@
     <Compile Include="IO\FileSystem.cs" />
     <Compile Include="Extensions\AnonymousTypeExtensions.cs" />
     <Compile Include="Extensions\YamlExtensions.cs" />
+    <Compile Include="Commands\CompileCommand.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />

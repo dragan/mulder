@@ -57,6 +57,10 @@
     <Compile Include="StepDefinitions\UserCreatesSite\ValidPathScenario.cs" />
     <Compile Include="StepDefinitions\UserCreatesSite\PathAlreadyExistsScenario.cs" />
     <Compile Include="StepDefinitions\UserCreatesSite\WithoutPathScenario.cs" />
+    <Compile Include="UserCompilesSite.feature.cs">
+      <DependentUpon>UserCompilesSite.feature</DependentUpon>
+    </Compile>
+    <Compile Include="StepDefinitions\UserCompilesSite\CompileDefaultSiteScenario.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
@@ -68,12 +72,17 @@
     <Folder Include="Resources\DefaultSite\" />
     <Folder Include="Resources\DefaultSite\Content\" />
     <Folder Include="Resources\DefaultSite\Layouts\" />
+    <Folder Include="StepDefinitions\UserCompilesSite\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="UserCreatesSite.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>UserCreatesSite.feature.cs</LastGenOutput>
+    </None>
+    <None Include="UserCompilesSite.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>UserCompilesSite.feature.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
