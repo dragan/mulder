@@ -4,12 +4,12 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
+using Autofac;
 using Shouldly;
 using TechTalk.SpecFlow;
 
+using Mulder.Acceptance.Tests.Helpers;
 using Mulder.Base;
-using Mulder.Base.Commands;
-using Mulder.Base.DataSources;
 using Mulder.Base.IO;
 using Mulder.Base.Logging;
 
@@ -19,7 +19,6 @@ namespace Mulder.Acceptance.Tests.StepDefinitions.UserCreatesSite
     public class ValidPathScenario
 	{
 		Regex regex;
-		
 		string tempTestPath;
 		string validPath;
 		StringWriter writer;
@@ -36,16 +35,9 @@ namespace Mulder.Acceptance.Tests.StepDefinitions.UserCreatesSite
 			
 			writer = new StringWriter();
 			
-			var log = new Log(writer, new LogLevel[] { LogLevel.Info, LogLevel.Error });
+			IContainer container = Ioc.CreateAcceptanceTestsContainer(writer, new LogLevel[] { LogLevel.Info, LogLevel.Error });
 			
-			var createCommands = new Dictionary<string, ICommand>();
-			var fileSystem = new FileSystem();
-			createCommands.Add("site", new CreateSiteCommand(log, fileSystem, new FileSystemUnified(log, fileSystem)));
-			
-			var commands = new Dictionary<string, ICommand>();
-			commands.Add("create", new CreateCommand(log, createCommands));
-			
-			entryPoint = new EntryPoint(log, commands);
+			entryPoint = container.Resolve<EntryPoint>();
 		}
 		
 		[AfterScenario]
