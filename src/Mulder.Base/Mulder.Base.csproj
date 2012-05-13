@@ -61,27 +61,26 @@
     <Folder Include="Commands\" />
     <Folder Include="IO\" />
     <Folder Include="Resources\" />
-    <Folder Include="Resources\Layouts\" />
-    <Folder Include="Resources\Content\" />
     <Folder Include="DataSources\" />
     <Folder Include="Logging\" />
     <Folder Include="Extensions\" />
+    <Folder Include="Resources\DefaultSite\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Config.yaml">
-      <LogicalName>DEFAULT_CONFIG</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Rules">
-      <LogicalName>DEFAULT_RULES</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Layouts\Default.html">
-      <LogicalName>DEFAULT_LAYOUT</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Content\Index.html">
+    <EmbeddedResource Include="Resources\DefaultSite\Content\Index.html">
       <LogicalName>DEFAULT_HOME_PAGE</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Content\Stylesheet.css">
+    <EmbeddedResource Include="Resources\DefaultSite\Content\Stylesheet.css">
       <LogicalName>DEFAULT_STYLE_SHEET</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\DefaultSite\Layouts\Default.html">
+      <LogicalName>DEFAULT_LAYOUT</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\DefaultSite\Config.yaml">
+      <LogicalName>DEFAULT_CONFIG</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\DefaultSite\Rules">
+      <LogicalName>DEFAULT_RULES</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
 </Project>
