@@ -9,5 +9,6 @@ namespace Mulder.Base.IO
 		void CreateDirectory(string path);
 		void ChangeDirectory(string path, Action action);
 		void WriteStreamToFile(string filename, Stream stream);
+		void WriteStringToFile(string filename, string text);
 	}
 }

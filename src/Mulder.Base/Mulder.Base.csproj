@@ -53,6 +53,19 @@
     <Compile Include="Extensions\AnonymousTypeExtensions.cs" />
     <Compile Include="Extensions\YamlExtensions.cs" />
     <Compile Include="Commands\CompileCommand.cs" />
+    <Compile Include="Domain\Site.cs" />
+    <Compile Include="Compilation\Compiler.cs" />
+    <Compile Include="Domain\Item.cs" />
+    <Compile Include="Domain\Rule.cs" />
+    <Compile Include="Domain\StaticFile.cs" />
+    <Compile Include="Domain\CompileRule.cs" />
+    <Compile Include="Domain\RouteRule.cs" />
+    <Compile Include="Domain\RuleContext.cs" />
+    <Compile Include="Domain\Layout.cs" />
+    <Compile Include="Domain\LayoutRule.cs" />
+    <Compile Include="Domain\ISourceFile.cs" />
+    <Compile Include="Compilation\FilterFactory.cs" />
+    <Compile Include="Filters\IFilter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
@@ -65,6 +78,9 @@
     <Folder Include="Logging\" />
     <Folder Include="Extensions\" />
     <Folder Include="Resources\DefaultSite\" />
+    <Folder Include="Domain\" />
+    <Folder Include="Compilation\" />
+    <Folder Include="Filters\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\DefaultSite\Content\Index.html">

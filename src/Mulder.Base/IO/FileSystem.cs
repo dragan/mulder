@@ -59,5 +59,12 @@ namespace Mulder.Base.IO
 				fileStream.Flush();
 			}
 		}
+		
+		public void WriteStringToFile(string filename, string text)
+		{
+			CreateDirectory(Path.GetDirectoryName(filename));
+			
+			File.WriteAllText(filename, text);
+		}
 	}
 }
