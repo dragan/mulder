@@ -268,8 +268,14 @@ namespace Mulder.Base.DataSources
 		
 		string CleanedIdentifier(string identifier)
 		{
-			return identifierCleanerRegex.Replace(string.Format("/{0}/", identifier.Trim()), "/");
+			return NormalizeSeparatorChars(identifierCleanerRegex.Replace(string.Format("/{0}/", identifier.Trim()), "/"));
 		}
+		
+		public static string NormalizeSeparatorChars(string identifier)
+		{
+			return identifier.Replace('\\', '/');
+		}
+
 		
 		DateTime GetModificationTime(string contentFileName, string metaFileName)
 		{
