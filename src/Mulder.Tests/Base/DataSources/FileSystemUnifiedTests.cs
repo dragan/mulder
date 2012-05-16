@@ -232,11 +232,11 @@ Item Content");
 				
 				fileSystem = Substitute.For<IFileSystem>();
 				fileSystem.GetAllFiles("content").Returns(fakeFiles);
-				fileSystem.ReadStringFromFile("content/index.html").Returns("---\nnum: 1\n---\ntest 1");
-				fileSystem.ReadStringFromFile("content/a.html").Returns("---\nnum: 2\n---\ntest 2");
-				fileSystem.ReadStringFromFile("content/a/b.html").Returns("---\nnum: 3\n---\ntest 3");
-				fileSystem.ReadStringFromFile("content/a/b/c.html").Returns("test 4");
-				fileSystem.ReadStringFromFile("content/a/b/c.yaml").Returns("num: 4");
+				fileSystem.ReadStringFromFile(Path.Combine("content", "index.html")).Returns("---\nnum: 1\n---\ntest 1");
+				fileSystem.ReadStringFromFile(Path.Combine("content", "a.html")).Returns("---\nnum: 2\n---\ntest 2");
+				fileSystem.ReadStringFromFile(Path.Combine("content", "a", "b.html")).Returns("---\nnum: 3\n---\ntest 3");
+				fileSystem.ReadStringFromFile(Path.Combine("content", "a", "b", "c.html")).Returns("test 4");
+				fileSystem.ReadStringFromFile(Path.Combine("content", "a", "b", "c.yaml")).Returns("num: 4");
 				fileSystem.GetLastWriteTimeUtc(Arg.Any<string>()).Returns(expectedModificationTime);
 				
 				configuration = Substitute.For<IDictionary<string, object>>();
@@ -354,9 +354,9 @@ Item Content");
 				
 				fileSystem = Substitute.For<IFileSystem>();
 				fileSystem.GetAllFiles("layouts").Returns(fakeFiles);
-				fileSystem.ReadStringFromFile("layouts/a.html").Returns("---\nnum: 1\n---\ntest 1");
-				fileSystem.ReadStringFromFile("layouts/b.html").Returns("test 2");
-				fileSystem.ReadStringFromFile("layouts/b.yaml").Returns("num: 2");
+				fileSystem.ReadStringFromFile(Path.Combine("layouts", "a.html")).Returns("---\nnum: 1\n---\ntest 1");
+				fileSystem.ReadStringFromFile(Path.Combine("layouts", "b.html")).Returns("test 2");
+				fileSystem.ReadStringFromFile(Path.Combine("layouts", "b.yaml")).Returns("num: 2");
 				fileSystem.GetLastWriteTimeUtc(Arg.Any<string>()).Returns(expectedModificationTime);
 				
 				configuration = Substitute.For<IDictionary<string, object>>();
