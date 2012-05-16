@@ -6,8 +6,10 @@ using Autofac;
 
 using Mulder.Base;
 using Mulder.Base.Commands;
+using Mulder.Base.Compilation;
 using Mulder.Base.DataSources;
 using Mulder.Base.IO;
+using Mulder.Base.Loading;
 using Mulder.Base.Logging;
 
 namespace Mulder.Cli
@@ -31,6 +33,13 @@ namespace Mulder.Cli
 			// FileSystem
 			builder.RegisterType<FileSystem>().As<IFileSystem>();
 			
+			// Loading
+			builder.RegisterType<Loader>().As<ILoader>().SingleInstance();
+			
+			// Compilation
+			builder.RegisterType<FilterFactory>().As<IFilterFactory>().SingleInstance();
+			builder.RegisterType<Compiler>().As<ICompiler>();
+			
 			// Commands
 			builder.Register(c => {
 				return new Dictionary<string, ICommand> {
@@ -44,7 +53,7 @@ namespace Mulder.Cli
 					},
 					{
 						"compile",
-						new CompileCommand(c.Resolve<ILog>())
+						new CompileCommand(c.Resolve<ILog>(), c.Resolve<ILoader>(), c.Resolve<ICompiler>())
 					}
 				};
 			}).As<IDictionary<string, ICommand>>();

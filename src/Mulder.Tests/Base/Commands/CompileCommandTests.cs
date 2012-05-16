@@ -6,6 +6,9 @@ using Shouldly;
 
 using Mulder.Base;
 using Mulder.Base.Commands;
+using Mulder.Base.Compilation;
+using Mulder.Base.Domain;
+using Mulder.Base.Loading;
 using Mulder.Base.Logging;
 
 namespace Mulder.Tests.Base.Commands
@@ -16,14 +19,18 @@ namespace Mulder.Tests.Base.Commands
 		public class when_compiling_a_valid_mulder_site
 		{
 			ILog log;
+			ILoader loader;
+			ICompiler compiler;
 			CompileCommand compileCommand;
 			
 			[SetUp]
 			public void SetUp()
 			{
 				log = Substitute.For<ILog>();
+				loader = Substitute.For<ILoader>();
+				compiler = Substitute.For<ICompiler>();
 				
-				compileCommand = new CompileCommand(log);
+				compileCommand = new CompileCommand(log, loader, compiler);
 			}
 			
 			[Test]
@@ -35,11 +42,27 @@ namespace Mulder.Tests.Base.Commands
 			}
 			
 			[Test]
+			public void should_call_load_site_data()
+			{
+				compileCommand.Execute(new string[] {});
+				
+				loader.Received().LoadSiteData();
+			}
+			
+			[Test]
 			public void should_log_compiling_site()
 			{
 				compileCommand.Execute(new string[] {});
 				
 				log.Received().InfoMessage("Compiling site...");
+			}
+			
+			[Test]
+			public void should_call_compile_with_a_site()
+			{
+				compileCommand.Execute(new string[] {});
+				
+				compiler.Received().Compile(Arg.Any<Site>());
 			}
 			
 			[Test]
