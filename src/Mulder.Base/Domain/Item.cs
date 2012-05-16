@@ -35,6 +35,25 @@ namespace Mulder.Base.Domain
 			staticFiles.Add(staticFile);
 		}
 		
+		public override string ToString()
+		{
+			var stringBuilder = new System.Text.StringBuilder();
+			
+			stringBuilder.AppendLine();
+			stringBuilder.AppendLine("Identifier: \"" + identifier + "\"");
+			stringBuilder.AppendLine("IsBinary: \"" + isBinary + "\"");
+			stringBuilder.AppendLine("Content: \"" + content + "\"");
+			stringBuilder.AppendLine("Meta:");
+			foreach (var kvp in meta) {
+				stringBuilder.AppendLine("  " + kvp.Key + ": \"" + kvp.Value.ToString() + "\"");
+			}
+			
+			stringBuilder.AppendLine("ModificationTime: \"" + modificationTime + "\"");
+			stringBuilder.AppendLine();
+			
+			return stringBuilder.ToString();
+		}
+		
 		public override int GetHashCode()
 		{
 			int hash = 17;
@@ -59,12 +78,25 @@ namespace Mulder.Base.Domain
 			if (other == null)
 				return false;
 			
+			bool metasAreEqual = true;
+			if (meta.Count == other.meta.Count) {
+				foreach (var kvp in meta) {
+					if (other.meta[kvp.Key].ToString() == kvp.Value.ToString())
+						continue;
+				
+					metasAreEqual = false;
+					break;
+				}
+			}
+			else {
+				metasAreEqual = false;
+			}
+			
 			return identifier == other.identifier
 				&& isBinary == other.isBinary
 				&& content == other.content
-				&& meta == other.meta
-				&& modificationTime == other.modificationTime
-				&& staticFiles == other.staticFiles;
+				&& metasAreEqual
+				&& modificationTime == other.modificationTime;
 		}
 	}
 }

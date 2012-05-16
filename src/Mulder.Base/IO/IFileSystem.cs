@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Mulder.Base.IO
@@ -10,5 +11,9 @@ namespace Mulder.Base.IO
 		void ChangeDirectory(string path, Action action);
 		void WriteStreamToFile(string filename, Stream stream);
 		void WriteStringToFile(string filename, string text);
+		IEnumerable<string> GetAllFiles(string path);
+		string ReadStringFromFile(string filename);
+		DateTime GetLastWriteTimeUtc(string filename);
+		bool FileExists(string filename);
 	}
 }

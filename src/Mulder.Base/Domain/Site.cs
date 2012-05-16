@@ -7,20 +7,20 @@ namespace Mulder.Base.Domain
 	public class Site : IEquatable<Site>
 	{
 		readonly IDictionary<string, object> configuration;
-		readonly IList<Item> items;
-		readonly IList<Layout> layouts;
-		readonly IList<CompileRule> compileRules;
-		readonly IList<RouteRule> routeRules;
-		readonly IList<LayoutRule> layoutRules;
+		readonly IEnumerable<Item> items;
+		readonly IEnumerable<Layout> layouts;
+		readonly IEnumerable<CompileRule> compileRules;
+		readonly IEnumerable<RouteRule> routeRules;
+		readonly IEnumerable<LayoutRule> layoutRules;
 		
 		public IDictionary<string, object> Configuration { get { return configuration; } }
-		public IList<Item> Items { get { return items; } }
-		public IList<Layout> Layouts { get { return layouts; } }
-		public IList<CompileRule> CompileRules { get { return compileRules; } }
-		public IList<RouteRule> RouteRules { get { return routeRules; } }
-		public IList<LayoutRule> LayoutRules { get { return layoutRules; } }
+		public IEnumerable<Item> Items { get { return items; } }
+		public IEnumerable<Layout> Layouts { get { return layouts; } }
+		public IEnumerable<CompileRule> CompileRules { get { return compileRules; } }
+		public IEnumerable<RouteRule> RouteRules { get { return routeRules; } }
+		public IEnumerable<LayoutRule> LayoutRules { get { return layoutRules; } }
 		
-		public Site(IDictionary<string, object> configuration, IList<Item> items, IList<Layout> layouts, IList<CompileRule> compileRules, IList<RouteRule> routeRules, IList<LayoutRule> layoutRules)
+		public Site(IDictionary<string, object> configuration, IEnumerable<Item> items, IEnumerable<Layout> layouts, IEnumerable<CompileRule> compileRules, IEnumerable<RouteRule> routeRules, IEnumerable<LayoutRule> layoutRules)
 		{
 			this.configuration = configuration;
 			this.items = items;

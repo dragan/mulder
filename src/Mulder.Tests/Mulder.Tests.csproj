@@ -61,6 +61,8 @@
     <Compile Include="Base\Domain\RuleTests.cs" />
     <Compile Include="Base\Domain\RouteRuleTests.cs" />
     <Compile Include="Base\Domain\CompileRuleTests.cs" />
+    <Compile Include="Base\Loading\LoaderTests.cs" />
+    <Compile Include="Base\Extensions\FileExtensionsTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
@@ -80,6 +82,7 @@
     <Folder Include="Base\Extensions\" />
     <Folder Include="Base\Compilation\" />
     <Folder Include="Base\Domain\" />
+    <Folder Include="Base\Loading\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

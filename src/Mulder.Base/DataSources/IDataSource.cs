@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+
+using Mulder.Base.Domain;
 
 namespace Mulder.Base.DataSources
 {
@@ -10,5 +13,7 @@ namespace Mulder.Base.DataSources
 		void CreateItem(string identifier, Stream content, string extension);
 		void CreateItem(string identifier, Stream content, object meta);
 		void CreateItem(string identifier, Stream content, string extension, object meta);
+		IEnumerable<Item> GetItems();
+		IEnumerable<Layout> GetLayouts();
 	}
 }

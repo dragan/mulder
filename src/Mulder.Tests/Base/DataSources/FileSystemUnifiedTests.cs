@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ using NUnit.Framework;
 using Shouldly;
 
 using Mulder.Base.DataSources;
+using Mulder.Base.Domain;
 using Mulder.Base.IO;
 using Mulder.Base.Logging;
 
@@ -21,6 +23,7 @@ namespace Mulder.Tests.Base.DataSources
 			MemoryStream content;
 			ILog log;
 			IFileSystem fileSystem;
+			IDictionary<string, object> configuration;
 			FileSystemUnified fileSystemUnified;
 			
 			[SetUp]
@@ -30,8 +33,9 @@ namespace Mulder.Tests.Base.DataSources
 				
 				log = Substitute.For<ILog>();
 				fileSystem = Substitute.For<IFileSystem>();
+				configuration = Substitute.For<IDictionary<string, object>>();
 				
-				fileSystemUnified = new FileSystemUnified(log, fileSystem);
+				fileSystemUnified = new FileSystemUnified(log, fileSystem, configuration);
 			}
 			
 			[Test]
@@ -65,6 +69,7 @@ namespace Mulder.Tests.Base.DataSources
 			MemoryStream content;
 			ILog log;
 			IFileSystem fileSystem;
+			IDictionary<string, object> configuration;
 			FileSystemUnified fileSystemUnified;
 			
 			[SetUp]
@@ -74,8 +79,9 @@ namespace Mulder.Tests.Base.DataSources
 				
 				log = Substitute.For<ILog>();
 				fileSystem = Substitute.For<IFileSystem>();
+				configuration = Substitute.For<IDictionary<string, object>>();
 				
-				fileSystemUnified = new FileSystemUnified(log, fileSystem);
+				fileSystemUnified = new FileSystemUnified(log, fileSystem, configuration);
 			}
 			
 			[Test]
@@ -109,6 +115,7 @@ namespace Mulder.Tests.Base.DataSources
 			MemoryStream content;
 			ILog log;
 			IFileSystem fileSystem;
+			IDictionary<string, object> configuration;
 			FileSystemUnified fileSystemUnified;
 			
 			[SetUp]
@@ -118,8 +125,9 @@ namespace Mulder.Tests.Base.DataSources
 				
 				log = Substitute.For<ILog>();
 				fileSystem = Substitute.For<IFileSystem>();
+				configuration = Substitute.For<IDictionary<string, object>>();
 				
-				fileSystemUnified = new FileSystemUnified(log, fileSystem);
+				fileSystemUnified = new FileSystemUnified(log, fileSystem, configuration);
 			}
 			
 			[Test]
@@ -154,6 +162,7 @@ namespace Mulder.Tests.Base.DataSources
 			MemoryStream expected;
 			ILog log;
 			IFileSystem fileSystem;
+			IDictionary<string, object> configuration;
 			FileSystemUnified fileSystemUnified;
 			
 			[SetUp]
@@ -174,8 +183,9 @@ Item Content");
 				
 				log = Substitute.For<ILog>();
 				fileSystem = Substitute.For<IFileSystem>();
+				configuration = Substitute.For<IDictionary<string, object>>();
 				
-				fileSystemUnified = new FileSystemUnified(log, fileSystem);
+				fileSystemUnified = new FileSystemUnified(log, fileSystem, configuration);
 			}
 			
 			[Test]
@@ -202,6 +212,190 @@ Item Content");
 				log.Received().InfoMessage("\tcreate {0}", Path.Combine("content", "file.txt"));
 			}
 		}
+		
+		[TestFixture]
+		public class when_getting_items
+		{
+			DateTime expectedModificationTime;
+			ILog log;
+			IFileSystem fileSystem;
+			IDictionary<string, object> configuration;
+			FileSystemUnified fileSystemUnified;
+			
+			[SetUp]
+			public void SetUp()
+			{
+				var fakeFiles = CreateFakeFileList();
+				expectedModificationTime = DateTime.UtcNow;
+				
+				log = Substitute.For<ILog>();
+				
+				fileSystem = Substitute.For<IFileSystem>();
+				fileSystem.GetAllFiles("content").Returns(fakeFiles);
+				fileSystem.ReadStringFromFile("content/a.html").Returns("---\nnum: 1\n---\ntest 1");
+				fileSystem.ReadStringFromFile("content/a/b.html").Returns("---\nnum: 2\n---\ntest 2");
+				fileSystem.ReadStringFromFile("content/a/b/c.html").Returns("test 3");
+				fileSystem.ReadStringFromFile("content/a/b/c.yaml").Returns("num: 3");
+				fileSystem.GetLastWriteTimeUtc(Arg.Any<string>()).Returns(expectedModificationTime);
+				
+				configuration = Substitute.For<IDictionary<string, object>>();
+				configuration["TextExtensions"].Returns(new string[] { "html", "yaml" });
+				
+				fileSystemUnified = new FileSystemUnified(log, fileSystem, configuration);
+			}
+			
+			[Test]
+			public void should_not_retrieve_certain_files()
+			{
+				IEnumerable<Item> items = fileSystemUnified.GetItems();
+				
+				items.Count().ShouldBe(4);
+			}
+			
+			[Test]
+			public void should_return_expected_items_based_on_fake_files()
+			{
+				IEnumerable<Item> expectedItems = CreateExpectedItems();
+				
+				IEnumerable<Item> items = fileSystemUnified.GetItems();
+				
+				items.ShouldBe(expectedItems);
+			}
+			
+			IEnumerable<string> CreateFakeFileList()
+			{
+				return new List<string> {
+					Path.Combine("content", "~bad1.txt"),
+					Path.Combine("content", "bad2.orig"),
+					Path.Combine("content", "bad3.rej"),
+					Path.Combine("content", "bad4.bak"),
+					Path.Combine("content", "a.html"),
+					Path.Combine("content", "a", "b.html"),
+					Path.Combine("content", "a", "b", "c.html"),
+					Path.Combine("content", "a", "b", "c.yaml"),
+					Path.Combine("content", "binary.dat")
+				};
+			}
+			
+			IEnumerable<Item> CreateExpectedItems()
+			{
+				return new List<Item> {
+					new Item("/a/",
+						false,
+						"test 1",
+						new Dictionary<string, object> {
+							{ "filename", "content/a.html" },
+							{ "meta_filename", "" },
+							{ "extension", ".html" },
+							{ "num", "1" }
+						},
+						expectedModificationTime),
+					new Item("/a/b/",
+						false,
+						"test 2",
+						new Dictionary<string, object> {
+							{ "filename", "content/a/b.html" },
+							{ "meta_filename", "" },
+							{ "extension", ".html" },
+							{ "num", "2" }
+						},
+						expectedModificationTime),
+					new Item("/a/b/c/",
+						false,
+						"test 3",
+						new Dictionary<string, object> {
+							{ "filename", "content/a/b/c.html" },
+							{ "meta_filename", "content/a/b/c.yaml" },
+							{ "extension", ".html" },
+							{ "num", "3" }
+						},
+						expectedModificationTime),
+					new Item("/binary/",
+						true,
+						"",
+						new Dictionary<string, object> {
+							{ "filename", "content/binary.dat" },
+							{ "meta_filename", "" },
+							{ "extension", ".dat" }
+						},
+						expectedModificationTime)
+				};
+			}
+		}
+		
+		[TestFixture]
+		public class when_getting_layouts
+		{
+			DateTime expectedModificationTime;
+			ILog log;
+			IFileSystem fileSystem;
+			IDictionary<string, object> configuration;
+			FileSystemUnified fileSystemUnified;
+			
+			[SetUp]
+			public void SetUp()
+			{
+				var fakeFiles = CreateFakeFileList();
+				expectedModificationTime = DateTime.UtcNow;
+				
+				log = Substitute.For<ILog>();
+				
+				fileSystem = Substitute.For<IFileSystem>();
+				fileSystem.GetAllFiles("layouts").Returns(fakeFiles);
+				fileSystem.ReadStringFromFile("layouts/a.html").Returns("---\nnum: 1\n---\ntest 1");
+				fileSystem.ReadStringFromFile("layouts/b.html").Returns("test 2");
+				fileSystem.ReadStringFromFile("layouts/b.yaml").Returns("num: 2");
+				fileSystem.GetLastWriteTimeUtc(Arg.Any<string>()).Returns(expectedModificationTime);
+				
+				configuration = Substitute.For<IDictionary<string, object>>();
+				configuration["TextExtensions"].Returns(new string[] { "html", "yaml" });
+				
+				fileSystemUnified = new FileSystemUnified(log, fileSystem, configuration);
+			}
+			
+			[Test]
+			public void should_return_expected_layouts_based_on_fake_files()
+			{
+				IEnumerable<Layout> expectedLayouts = CreateExpectedLayouts();
+				
+				IEnumerable<Layout> layouts = fileSystemUnified.GetLayouts();
+				
+				layouts.ShouldBe(expectedLayouts);
+			}
+			
+			IEnumerable<string> CreateFakeFileList()
+			{
+				return new List<string> {
+					Path.Combine("layouts", "a.html"),
+					Path.Combine("layouts", "b.html"),
+					Path.Combine("layouts", "b.yaml")
+				};
+			}
+			
+			IEnumerable<Layout> CreateExpectedLayouts()
+			{
+				return new List<Layout> {
+					new Layout("/a/",
+						"test 1",
+						new Dictionary<string, object> {
+							{ "filename", "layouts/a.html" },
+							{ "meta_filename", "" },
+							{ "extension", ".html" },
+							{ "num", "1" }
+						},
+						expectedModificationTime),
+					new Layout("/b/",
+						"test 2",
+						new Dictionary<string, object> {
+							{ "filename", "layouts/b.html" },
+							{ "meta_filename", "layouts/b.yaml" },
+							{ "extension", ".html" },
+							{ "num", "2" }
+						},
+						expectedModificationTime)
+				};
+			}
+		}
 	}
 	
 	public static class MemoryStreamExtensions
@@ -221,4 +415,3 @@ Item Content");
 		}
 	}
 }
-

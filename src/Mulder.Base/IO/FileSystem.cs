@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Mulder.Base.IO
@@ -65,6 +66,40 @@ namespace Mulder.Base.IO
 			CreateDirectory(Path.GetDirectoryName(filename));
 			
 			File.WriteAllText(filename, text);
+		}
+		
+		public IEnumerable<string> GetAllFiles(string path)
+		{
+			var files = new List<string>();
+			
+			foreach (string file in Directory.GetFiles(path)) {
+				files.Add(Path.Combine(path, Path.GetFileName(file)));
+			}
+			
+			string[] pathDirectories = Directory.GetDirectories(path);
+			if (pathDirectories.Length > 0) {
+				foreach (string directory in pathDirectories) {
+					IEnumerable<string> directoryFiles = GetAllFiles(directory);
+					files.AddRange(directoryFiles);
+				}
+			}
+			
+			return files;
+		}
+		
+		public string ReadStringFromFile(string filename)
+		{
+			return File.ReadAllText(filename);
+		}
+		
+		public DateTime GetLastWriteTimeUtc(string filename)
+		{
+			return File.GetLastWriteTimeUtc(filename);
+		}
+		
+		public bool FileExists(string filename)
+		{
+			return File.Exists(filename);
 		}
 	}
 }

@@ -88,7 +88,7 @@ namespace Mulder.Tests.Base.Compilation
 			[Test]
 			public void should_set_layout_on_each_static_file()
 			{
-				var expectedLayout = site.Layouts[0];
+				var expectedLayout = site.Layouts.Single();
 				
 				compiler.Compile(site);
 				

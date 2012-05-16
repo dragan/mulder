@@ -48,11 +48,11 @@ namespace Mulder.Tests.Base.Domain
 			{
 				return new Site(
 					Substitute.For<IDictionary<string, object>>(),
-					Substitute.For<IList<Item>>(),
-					Substitute.For<IList<Layout>>(),
-					Substitute.For<IList<CompileRule>>(),
-					Substitute.For<IList<RouteRule>>(),
-					Substitute.For<IList<LayoutRule>>());
+					Substitute.For<IEnumerable<Item>>(),
+					Substitute.For<IEnumerable<Layout>>(),
+					Substitute.For<IEnumerable<CompileRule>>(),
+					Substitute.For<IEnumerable<RouteRule>>(),
+					Substitute.For<IEnumerable<LayoutRule>>());
 			}
 		}
 	}
