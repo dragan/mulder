@@ -42,6 +42,9 @@
     <Reference Include="DotLiquid">
       <HintPath>..\..\packages\DotLiquid.1.6.1.0\lib\NET40\DotLiquid.dll</HintPath>
     </Reference>
+    <Reference Include="MarkdownSharp">
+      <HintPath>..\..\packages\MarkdownSharp.1.13.0.0\lib\35\MarkdownSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -79,6 +82,7 @@
     <Compile Include="Extensions\FileExtensions.cs" />
     <Compile Include="Filters\LiquidFilter.cs" />
     <Compile Include="Compilation\Filters.cs" />
+    <Compile Include="Filters\MarkdownFilter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />

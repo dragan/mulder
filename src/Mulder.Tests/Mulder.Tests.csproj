@@ -65,6 +65,7 @@
     <Compile Include="Base\Extensions\FileExtensionsTests.cs" />
     <Compile Include="Base\Compilation\FilterFactoryTests.cs" />
     <Compile Include="Base\Filters\LiquidFilterTests.cs" />
+    <Compile Include="Base\Filters\MarkdownFilterTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />

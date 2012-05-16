@@ -18,6 +18,8 @@ namespace Mulder.Base.Compilation
 			switch (filter) {
 			case Filters.LIQUID:
 				return new LiquidFilter();
+			case Filters.MARKDOWN:
+				return new MarkdownFilter();
 			default:
 				return null;
 			}
