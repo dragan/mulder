@@ -286,7 +286,7 @@ Item Content");
 						false,
 						"test 1",
 						new Dictionary<string, object> {
-							{ "filename", "content/index.html" },
+							{ "filename", Path.Combine("content", "index.html") },
 							{ "meta_filename", "" },
 							{ "extension", ".html" },
 							{ "num", "1" }
@@ -296,7 +296,7 @@ Item Content");
 						false,
 						"test 2",
 						new Dictionary<string, object> {
-							{ "filename", "content/a.html" },
+							{ "filename", Path.Combine("content", "a.html") },
 							{ "meta_filename", "" },
 							{ "extension", ".html" },
 							{ "num", "2" }
@@ -306,7 +306,7 @@ Item Content");
 						false,
 						"test 3",
 						new Dictionary<string, object> {
-							{ "filename", "content/a/b.html" },
+							{ "filename", Path.Combine("content", "a", "b.html") },
 							{ "meta_filename", "" },
 							{ "extension", ".html" },
 							{ "num", "3" }
@@ -316,8 +316,8 @@ Item Content");
 						false,
 						"test 4",
 						new Dictionary<string, object> {
-							{ "filename", "content/a/b/c.html" },
-							{ "meta_filename", "content/a/b/c.yaml" },
+							{ "filename", Path.Combine("content", "a", "b", "c.html") },
+							{ "meta_filename", Path.Combine("content", "a", "b", "c.yaml") },
 							{ "extension", ".html" },
 							{ "num", "4" }
 						},
@@ -326,7 +326,7 @@ Item Content");
 						true,
 						"",
 						new Dictionary<string, object> {
-							{ "filename", "content/binary.dat" },
+							{ "filename", Path.Combine("content", "binary.dat") },
 							{ "meta_filename", "" },
 							{ "extension", ".dat" }
 						},
@@ -390,7 +390,7 @@ Item Content");
 					new Layout("/a/",
 						"test 1",
 						new Dictionary<string, object> {
-							{ "filename", "layouts/a.html" },
+							{ "filename", Path.Combine("layouts", "a.html") },
 							{ "meta_filename", "" },
 							{ "extension", ".html" },
 							{ "num", "1" }
@@ -399,8 +399,8 @@ Item Content");
 					new Layout("/b/",
 						"test 2",
 						new Dictionary<string, object> {
-							{ "filename", "layouts/b.html" },
-							{ "meta_filename", "layouts/b.yaml" },
+							{ "filename", Path.Combine("layouts", "b.html") },
+							{ "meta_filename", Path.Combine("layouts", "b.yaml") },
 							{ "extension", ".html" },
 							{ "num", "2" }
 						},
