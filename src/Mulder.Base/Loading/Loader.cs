@@ -193,7 +193,6 @@ namespace Mulder.Base.Loading
 					GenerateInMemory = true,
 					GenerateExecutable = false,
 					IncludeDebugInformation = false,
-					OutputAssembly = "Mulder.Base.Domain.RuleProxy.dll",
 					ReferencedAssemblies = { assembly.Location }
 				};
 				

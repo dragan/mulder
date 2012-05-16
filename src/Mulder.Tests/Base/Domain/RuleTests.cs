@@ -29,6 +29,7 @@ namespace Mulder.Tests.Base.Domain
 			public void should_all_be_applicable_with_just_a_star_wild_card_for_pattern()
 			{
 				var applicableItems = new List<Item> {
+					CreateItem("/"),
 					CreateItem("/a/"),
 					CreateItem("/a/b/"),
 					CreateItem("/a/b/c/"),

@@ -232,10 +232,11 @@ Item Content");
 				
 				fileSystem = Substitute.For<IFileSystem>();
 				fileSystem.GetAllFiles("content").Returns(fakeFiles);
-				fileSystem.ReadStringFromFile("content/a.html").Returns("---\nnum: 1\n---\ntest 1");
-				fileSystem.ReadStringFromFile("content/a/b.html").Returns("---\nnum: 2\n---\ntest 2");
-				fileSystem.ReadStringFromFile("content/a/b/c.html").Returns("test 3");
-				fileSystem.ReadStringFromFile("content/a/b/c.yaml").Returns("num: 3");
+				fileSystem.ReadStringFromFile("content/index.html").Returns("---\nnum: 1\n---\ntest 1");
+				fileSystem.ReadStringFromFile("content/a.html").Returns("---\nnum: 2\n---\ntest 2");
+				fileSystem.ReadStringFromFile("content/a/b.html").Returns("---\nnum: 3\n---\ntest 3");
+				fileSystem.ReadStringFromFile("content/a/b/c.html").Returns("test 4");
+				fileSystem.ReadStringFromFile("content/a/b/c.yaml").Returns("num: 4");
 				fileSystem.GetLastWriteTimeUtc(Arg.Any<string>()).Returns(expectedModificationTime);
 				
 				configuration = Substitute.For<IDictionary<string, object>>();
@@ -249,7 +250,7 @@ Item Content");
 			{
 				IEnumerable<Item> items = fileSystemUnified.GetItems();
 				
-				items.Count().ShouldBe(4);
+				items.Count().ShouldBe(5);
 			}
 			
 			[Test]
@@ -269,6 +270,7 @@ Item Content");
 					Path.Combine("content", "bad2.orig"),
 					Path.Combine("content", "bad3.rej"),
 					Path.Combine("content", "bad4.bak"),
+					Path.Combine("content", "index.html"),
 					Path.Combine("content", "a.html"),
 					Path.Combine("content", "a", "b.html"),
 					Path.Combine("content", "a", "b", "c.html"),
@@ -280,34 +282,44 @@ Item Content");
 			IEnumerable<Item> CreateExpectedItems()
 			{
 				return new List<Item> {
-					new Item("/a/",
+					new Item("/",
 						false,
 						"test 1",
 						new Dictionary<string, object> {
-							{ "filename", "content/a.html" },
+							{ "filename", "content/index.html" },
 							{ "meta_filename", "" },
 							{ "extension", ".html" },
 							{ "num", "1" }
 						},
 						expectedModificationTime),
-					new Item("/a/b/",
+					new Item("/a/",
 						false,
 						"test 2",
 						new Dictionary<string, object> {
-							{ "filename", "content/a/b.html" },
+							{ "filename", "content/a.html" },
 							{ "meta_filename", "" },
 							{ "extension", ".html" },
 							{ "num", "2" }
 						},
 						expectedModificationTime),
-					new Item("/a/b/c/",
+					new Item("/a/b/",
 						false,
 						"test 3",
+						new Dictionary<string, object> {
+							{ "filename", "content/a/b.html" },
+							{ "meta_filename", "" },
+							{ "extension", ".html" },
+							{ "num", "3" }
+						},
+						expectedModificationTime),
+					new Item("/a/b/c/",
+						false,
+						"test 4",
 						new Dictionary<string, object> {
 							{ "filename", "content/a/b/c.html" },
 							{ "meta_filename", "content/a/b/c.yaml" },
 							{ "extension", ".html" },
-							{ "num", "3" }
+							{ "num", "4" }
 						},
 						expectedModificationTime),
 					new Item("/binary/",

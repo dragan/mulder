@@ -75,7 +75,11 @@ namespace Mulder.Base.Compilation
 				ExecuteFilters(staticFile);
 				ExecuteLayoutFilter(staticFile, site);
 				
-				fileSystem.WriteStringToFile(staticFile.Path, staticFile.GetLastSnapShot());
+				if (staticFile.Item.IsBinary) {
+					fileSystem.Copy(staticFile.Item.Meta["filename"].ToString(), staticFile.Path);
+				} else {
+					fileSystem.WriteStringToFile(staticFile.Path, staticFile.GetLastSnapShot());
+				}
 				
 				log.InfoMessage("\tcreate {0}", staticFile.Path);
 			}
@@ -99,18 +103,20 @@ namespace Mulder.Base.Compilation
 		
 		void ExecuteLayoutFilter(StaticFile staticFile, Site site)
 		{
-			var layoutRule = site.GetLayoutRuleFor(staticFile.Layout);
+			if (staticFile.Layout != null) {
+				var layoutRule = site.GetLayoutRuleFor(staticFile.Layout);
 			
-			IFilter filter = filterFactory.CreateFilter(layoutRule.FilterName);
-			var arguments = new Dictionary<string, object> {
-				{ "layout", staticFile.Layout.Meta },
-				{ "item", staticFile.Item.Meta },
-				{ "content", staticFile.GetLastSnapShot() }
-			};
+				IFilter filter = filterFactory.CreateFilter(layoutRule.FilterName);
+				var arguments = new Dictionary<string, object> {
+					{ "layout", staticFile.Layout.Meta },
+					{ "item", staticFile.Item.Meta },
+					{ "content", staticFile.GetLastSnapShot() }
+				};
 			
-			string result = filter.Execute(staticFile.Layout.Content, arguments);
+				string result = filter.Execute(staticFile.Layout.Content, arguments);
 			
-			staticFile.CreateSnapShot(result);
+				staticFile.CreateSnapShot(result);
+			}
 		}
 	}
 	

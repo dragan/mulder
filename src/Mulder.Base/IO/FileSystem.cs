@@ -101,5 +101,10 @@ namespace Mulder.Base.IO
 		{
 			return File.Exists(filename);
 		}
+		
+		public void Copy(string source, string destination)
+		{
+			File.Copy(source, destination, true);
+		}
 	}
 }

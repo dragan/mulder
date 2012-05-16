@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using Mulder.Base.Domain;
+using Mulder.Base.Extensions;
 
 namespace Mulder.Base.Domain
 {{

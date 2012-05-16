@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Mulder.Base.Domain
@@ -43,7 +44,13 @@ namespace Mulder.Base.Domain
 		{
 			string pattern = Regex.Escape(identifierPattern);
 			pattern = pattern.StartsWith("/") ? pattern : "/" + pattern;
-			pattern = pattern.EndsWith("/") ? pattern : pattern + "/";
+			
+			// TODO: Not sure I like this.  Try to make easier to read
+			// The logic is to add a "/" at the end of the pattern only if there isn't one already and the 
+			// the last characters aren't "*" or "/"
+			if (!pattern.EndsWith("/") && !(new [] { "*", "/" }.Contains(pattern.Substring(pattern.Length - 1))))
+				pattern = pattern + "/";
+			
 			pattern = pattern.Replace(@"\*", "(.*?)").Replace(@"\+", "(.+?)");
 			
 			return new Regex('^' + pattern + '$', RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);

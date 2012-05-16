@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text.RegularExpressions;
 
 using Autofac;
@@ -18,7 +17,7 @@ namespace Mulder.Acceptance.Tests.StepDefinitions.UserCreatesSite
 	[Binding]
     public class ValidPathScenario
 	{
-		Regex regex;
+		Regex whitespaceRegex;
 		string tempTestPath;
 		string validPath;
 		StringWriter writer;
@@ -28,7 +27,7 @@ namespace Mulder.Acceptance.Tests.StepDefinitions.UserCreatesSite
 		[BeforeScenario]
 		public void BeforeScenario()
 		{
-			regex = new Regex(@"(\t|\r\n|\r|\n)+");
+			whitespaceRegex = new Regex(@"(\t|\r\n|\r|\n)+");
 			
 			tempTestPath = Path.Combine(Path.GetTempPath(), "mulder-acceptance-test-files");
 			CreateTestFiles();
@@ -52,11 +51,11 @@ namespace Mulder.Acceptance.Tests.StepDefinitions.UserCreatesSite
 		
 		void CreateTestFiles()
 		{
-			CreateFileFromResourceName("TEST_DEFAULT_CONFIG", Path.Combine(tempTestPath, "config.yaml"));
-			CreateFileFromResourceName("TEST_DEFAULT_RULES", Path.Combine(tempTestPath, "Rules"));
-			CreateFileFromResourceName("TEST_DEFAULT_LAYOUT", Path.Combine(tempTestPath, "default.html"));
-			CreateFileFromResourceName("TEST_DEFAULT_HOME_PAGE", Path.Combine(tempTestPath, "index.html"));
-			CreateFileFromResourceName("TEST_DEFAULT_STYLE_SHEET", Path.Combine(tempTestPath, "stylesheet.css"));
+			TestFileCreation.CreateFileFromResourceName("TEST_DEFAULT_CONFIG", Path.Combine(tempTestPath, "config.yaml"));
+			TestFileCreation.CreateFileFromResourceName("TEST_DEFAULT_RULES", Path.Combine(tempTestPath, "Rules"));
+			TestFileCreation.CreateFileFromResourceName("TEST_DEFAULT_LAYOUT", Path.Combine(tempTestPath, "default.html"));
+			TestFileCreation.CreateFileFromResourceName("TEST_DEFAULT_HOME_PAGE", Path.Combine(tempTestPath, "index.html"));
+			TestFileCreation.CreateFileFromResourceName("TEST_DEFAULT_STYLE_SHEET", Path.Combine(tempTestPath, "stylesheet.css"));
 		}
 		
 		[Given(@"I have a valid path")]
@@ -132,8 +131,8 @@ namespace Mulder.Acceptance.Tests.StepDefinitions.UserCreatesSite
 		[Then(@"the ""config\.yaml"" file should contain the default config")]
 		public void Then_the_config_yaml_file_should_contain_the_default_config()
 		{
-			string expectedDefaultConfigContent = regex.Replace(File.ReadAllText(Path.Combine(tempTestPath, "config.yaml")), "");
-			string actualDefaultConfigContent = regex.Replace(File.ReadAllText(Path.Combine(validPath, "config.yaml")), "");
+			string expectedDefaultConfigContent = whitespaceRegex.Replace(File.ReadAllText(Path.Combine(tempTestPath, "config.yaml")), "");
+			string actualDefaultConfigContent = whitespaceRegex.Replace(File.ReadAllText(Path.Combine(validPath, "config.yaml")), "");
 			
 			actualDefaultConfigContent.ShouldBe(expectedDefaultConfigContent);
 		}
@@ -141,8 +140,8 @@ namespace Mulder.Acceptance.Tests.StepDefinitions.UserCreatesSite
 		[Then(@"the ""Rules"" file should contain the default rules")]
 		public void Then_the_rules_file_should_contain_the_default_rules()
 		{
-			string expectedDefaultRulesContent = regex.Replace(File.ReadAllText(Path.Combine(tempTestPath, "Rules")), "");
-			string actualDefaultRulesContent = regex.Replace(File.ReadAllText(Path.Combine(validPath, "Rules")), "");
+			string expectedDefaultRulesContent = whitespaceRegex.Replace(File.ReadAllText(Path.Combine(tempTestPath, "Rules")), "");
+			string actualDefaultRulesContent = whitespaceRegex.Replace(File.ReadAllText(Path.Combine(validPath, "Rules")), "");
 			
 			actualDefaultRulesContent.ShouldBe(expectedDefaultRulesContent);
 		}
@@ -150,8 +149,8 @@ namespace Mulder.Acceptance.Tests.StepDefinitions.UserCreatesSite
 		[Then(@"the ""layouts/default\.html"" file should contain the default layout")]
 		public void Then_the_layouts_default_html_file_should_contain_the_default_layout()
 		{
-			string expectedDefaultLayoutHtml = regex.Replace(File.ReadAllText(Path.Combine(tempTestPath, "default.html")), "");
-			string actualDefaultLayoutHtml = regex.Replace(File.ReadAllText(Path.Combine(validPath, "layouts", "default.html")), "");
+			string expectedDefaultLayoutHtml = whitespaceRegex.Replace(File.ReadAllText(Path.Combine(tempTestPath, "default.html")), "");
+			string actualDefaultLayoutHtml = whitespaceRegex.Replace(File.ReadAllText(Path.Combine(validPath, "layouts", "default.html")), "");
 			
 			actualDefaultLayoutHtml.ShouldBe(expectedDefaultLayoutHtml);
 		}
@@ -159,8 +158,8 @@ namespace Mulder.Acceptance.Tests.StepDefinitions.UserCreatesSite
 		[Then(@"the ""content/index\.html"" file should contain the default content")]
 		public void Then_the_content_index_html_file_should_contain_the_default_content()
 		{
-			string expectedDefaultHomePageHtml = regex.Replace(File.ReadAllText(Path.Combine(tempTestPath, "index.html")), "");
-			string actualDefaultHomePageHtml = regex.Replace(File.ReadAllText(Path.Combine(validPath, "content", "index.html")), "");
+			string expectedDefaultHomePageHtml = whitespaceRegex.Replace(File.ReadAllText(Path.Combine(tempTestPath, "index.html")), "");
+			string actualDefaultHomePageHtml = whitespaceRegex.Replace(File.ReadAllText(Path.Combine(validPath, "content", "index.html")), "");
 			
 			actualDefaultHomePageHtml.ShouldBe(expectedDefaultHomePageHtml);
 		}
@@ -168,8 +167,8 @@ namespace Mulder.Acceptance.Tests.StepDefinitions.UserCreatesSite
 		[Then(@"the ""content/stylesheet\.css"" file should contain the default styles")]
 		public void Then_the_content_stylesheet_css_file_should_contain_the_default_styles()
 		{
-			string expectedDefaultStylesheetCss = regex.Replace(File.ReadAllText(Path.Combine(tempTestPath, "stylesheet.css")), "");
-			string actualDefaultStylesheetCss = regex.Replace(File.ReadAllText(Path.Combine(validPath, "content", "stylesheet.css")), "");
+			string expectedDefaultStylesheetCss = whitespaceRegex.Replace(File.ReadAllText(Path.Combine(tempTestPath, "stylesheet.css")), "");
+			string actualDefaultStylesheetCss = whitespaceRegex.Replace(File.ReadAllText(Path.Combine(validPath, "content", "stylesheet.css")), "");
 			
 			actualDefaultStylesheetCss.ShouldBe(expectedDefaultStylesheetCss);
 		}
@@ -178,19 +177,6 @@ namespace Mulder.Acceptance.Tests.StepDefinitions.UserCreatesSite
 		public void Then_mulder_should_terminate_with_an_success_exit_code()
 		{
 			exitCode.ShouldBe(ExitCode.Success);
-		}
-		
-		Stream GetResourceStreamFromResourceName(string resourceName)
-		{
-			return Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
-		}
-		
-		void CreateFileFromResourceName(string resourceName, string path)
-		{
-			var fileSystem = new FileSystem();
-			using (var resourceStream = GetResourceStreamFromResourceName(resourceName)) {
-				fileSystem.WriteStreamToFile(path, resourceStream);
-			}
 		}
 	}
 }

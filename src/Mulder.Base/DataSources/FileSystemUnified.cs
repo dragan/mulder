@@ -20,12 +20,18 @@ namespace Mulder.Base.DataSources
 		readonly ILog log;
 		readonly IFileSystem fileSystem;
 		readonly IDictionary<string, object> configuration;
+		readonly Regex identifierCleanerRegex;
+		
+		public FileSystemUnified(ILog log, IFileSystem fileSystem) : this(log, fileSystem, null)
+		{
+		}
 		
 		public FileSystemUnified(ILog log, IFileSystem fileSystem, IDictionary<string, object> configuration)
 		{
 			this.log = log;
 			this.fileSystem = fileSystem;
 			this.configuration = configuration;
+			this.identifierCleanerRegex = new Regex("^/+|/+$");
 		}
 		
 		public void CreateLayout(string identifier, Stream content)
@@ -248,16 +254,21 @@ namespace Mulder.Base.DataSources
 		string GetIdentifierForFileName(string fileName)
 		{
 			string identifier = string.Empty;
-			if (fileName.Contains("/index.html")) {
+			if (fileName.Contains("index.html")) {
 				// Remove /index.html from file name
-				identifier = fileName.Replace(Path.DirectorySeparatorChar + Path.GetFileName(fileName), "");
+				identifier = fileName.Replace(Path.GetFileName(fileName), "");
 			}
 			else {
 				// Remove extension from file name
 				identifier = fileName.Substring(0, fileName.Length - Path.GetExtension(fileName).Length);
 			}
 			
-			return identifier != string.Empty ? string.Format("/{0}/", identifier.Trim()) : string.Empty;
+			return CleanedIdentifier(identifier);
+		}
+		
+		string CleanedIdentifier(string identifier)
+		{
+			return identifierCleanerRegex.Replace(string.Format("/{0}/", identifier.Trim()), "/");
 		}
 		
 		DateTime GetModificationTime(string contentFileName, string metaFileName)

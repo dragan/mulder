@@ -15,5 +15,6 @@ namespace Mulder.Base.IO
 		string ReadStringFromFile(string filename);
 		DateTime GetLastWriteTimeUtc(string filename);
 		bool FileExists(string filename);
+		void Copy(string source, string destination);
 	}
 }
