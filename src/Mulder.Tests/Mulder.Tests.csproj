@@ -63,6 +63,8 @@
     <Compile Include="Base\Domain\CompileRuleTests.cs" />
     <Compile Include="Base\Loading\LoaderTests.cs" />
     <Compile Include="Base\Extensions\FileExtensionsTests.cs" />
+    <Compile Include="Base\Compilation\FilterFactoryTests.cs" />
+    <Compile Include="Base\Filters\LiquidFilterTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
@@ -83,6 +85,7 @@
     <Folder Include="Base\Compilation\" />
     <Folder Include="Base\Domain\" />
     <Folder Include="Base\Loading\" />
+    <Folder Include="Base\Filters\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

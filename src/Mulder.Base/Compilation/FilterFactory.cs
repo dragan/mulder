@@ -13,7 +13,14 @@ namespace Mulder.Base.Compilation
 		
 		public IFilter CreateFilter(string filterName)
 		{
-			return null;
+			Filters filter = (Filters)Enum.Parse(typeof(Filters), filterName.ToUpper());
+			
+			switch (filter) {
+			case Filters.LIQUID:
+				return new LiquidFilter();
+			default:
+				return null;
+			}
 		}
 	}
 	

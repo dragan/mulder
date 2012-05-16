@@ -39,6 +39,9 @@
     <Reference Include="YamlDotNet.RepresentationModel">
       <HintPath>..\..\packages\YamlDotNet.RepresentationModel.1.1.15\lib\YamlDotNet.RepresentationModel.dll</HintPath>
     </Reference>
+    <Reference Include="DotLiquid">
+      <HintPath>..\..\packages\DotLiquid.1.6.1.0\lib\NET40\DotLiquid.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -74,6 +77,8 @@
     <Compile Include="Filters\IFilter.cs" />
     <Compile Include="Loading\Loader.cs" />
     <Compile Include="Extensions\FileExtensions.cs" />
+    <Compile Include="Filters\LiquidFilter.cs" />
+    <Compile Include="Compilation\Filters.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
