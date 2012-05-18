@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Mulder.Base.Domain
 {
@@ -28,6 +29,8 @@ namespace Mulder.Base.Domain
 			this.compileRules = compileRules;
 			this.routeRules = routeRules;
 			this.layoutRules = layoutRules;
+			
+			CreateParentChildLinks();
 		}
 		
 		public CompileRule GetCompilationRuleFor(Item item)
@@ -80,6 +83,34 @@ namespace Mulder.Base.Domain
 				&& compileRules == other.compileRules
 				&& routeRules == other.routeRules
 				&& layoutRules == other.layoutRules;
+		}
+		
+		void CreateParentChildLinks()
+		{
+			var stripLastPathRegex = new Regex("[^/]+/$");
+			
+			var sortedItems = items.OrderBy(i => i.Identifier).ToList();
+			
+			foreach (Item item in sortedItems) {
+				string parentIdentifier = stripLastPathRegex.Replace(item.Identifier, "");
+				Item parent = null;
+				
+				foreach (Item candidate in items) {
+					if (candidate.Identifier != parentIdentifier) {
+						continue;
+					}
+					else if (candidate.Identifier == item.Identifier) {
+						break;
+					}
+					
+					parent = candidate;
+				}
+				
+				if (parent != null) {
+					item.Parent = parent;
+					parent.AddChild(item);
+				}
+			}
 		}
 	}
 }

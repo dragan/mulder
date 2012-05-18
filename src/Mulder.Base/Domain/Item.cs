@@ -10,6 +10,7 @@ namespace Mulder.Base.Domain
 		readonly string content;
 		readonly IDictionary<string, object> meta;
 		readonly DateTime modificationTime;
+		readonly List<Item> children;
 		readonly List<StaticFile> staticFiles;
 		
 		public string Identifier { get { return identifier; } }
@@ -17,6 +18,8 @@ namespace Mulder.Base.Domain
 		public string Content { get { return content; } }
 		public IDictionary<string, object> Meta { get { return meta; } }
 		public DateTime ModificationTime { get { return modificationTime; } }
+		public Item Parent { get; set; }
+		public IEnumerable<Item> Children { get { return children; } }
 		public IEnumerable<StaticFile> StaticFiles { get { return staticFiles; } }
 		
 		public Item(string identifier, bool isBinary, string content, IDictionary<string, object> meta, DateTime modificationTime)
@@ -27,12 +30,18 @@ namespace Mulder.Base.Domain
 			this.meta = meta;
 			this.modificationTime = modificationTime;
 			
+			children = new List<Item>();
 			staticFiles = new List<StaticFile>();
 		}
 		
 		public void AddStaticFile(StaticFile staticFile)
 		{
 			staticFiles.Add(staticFile);
+		}
+		
+		public void AddChild(Item item)
+		{
+			children.Add(item);
 		}
 		
 		public override string ToString()
