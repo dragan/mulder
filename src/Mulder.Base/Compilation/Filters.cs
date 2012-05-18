@@ -5,6 +5,7 @@ namespace Mulder.Base.Compilation
 	public enum Filters
 	{
 		LIQUID,
-		MARKDOWN
+		MARKDOWN,
+		LESS
 	}
 }

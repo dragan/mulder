@@ -1,10 +1,12 @@
 using System;
 
+using NSubstitute;
 using NUnit.Framework;
 using Shouldly;
 
 using Mulder.Base.Compilation;
 using Mulder.Base.Filters;
+using Mulder.Base.IO;
 
 namespace Mulder.Tests.Base.Compilation
 {
@@ -18,7 +20,8 @@ namespace Mulder.Tests.Base.Compilation
 			[SetUp]
 			public void SetUp()
 			{
-				filterFactory = new FilterFactory();
+				var fileSystem = Substitute.For<IFileSystem>();
+				filterFactory = new FilterFactory(fileSystem);
 			}
 			
 			[Test]
@@ -35,6 +38,14 @@ namespace Mulder.Tests.Base.Compilation
 				IFilter filter = filterFactory.CreateFilter("markdown");
 				
 				filter.ShouldBeTypeOf(typeof(MarkdownFilter));
+			}
+			
+			[Test]
+			public void should_be_able_to_create_less_filter()
+			{
+				IFilter filter = filterFactory.CreateFilter("less");
+				
+				filter.ShouldBeTypeOf(typeof(LessFilter));
 			}
 		}
 	}

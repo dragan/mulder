@@ -1,14 +1,17 @@
 using System;
 
-using Mulder.Base.Domain;
 using Mulder.Base.Filters;
+using Mulder.Base.IO;
 
 namespace Mulder.Base.Compilation
 {
 	public class FilterFactory : IFilterFactory
 	{
-		public FilterFactory()
+		readonly IFileSystem fileSystem;
+		
+		public FilterFactory(IFileSystem fileSystem)
 		{
+			this.fileSystem = fileSystem;
 		}
 		
 		public IFilter CreateFilter(string filterName)
@@ -20,6 +23,8 @@ namespace Mulder.Base.Compilation
 				return new LiquidFilter();
 			case Filters.MARKDOWN:
 				return new MarkdownFilter();
+			case Filters.LESS:
+				return new LessFilter(fileSystem);
 			default:
 				return null;
 			}
