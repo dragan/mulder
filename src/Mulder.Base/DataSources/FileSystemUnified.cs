@@ -255,7 +255,7 @@ namespace Mulder.Base.DataSources
 		{
 			string identifier = string.Empty;
 			if (fileName.Contains("index.html")) {
-				// Remove /index.html from file name
+				// Remove index.html from file name
 				identifier = fileName.Replace(Path.GetFileName(fileName), "");
 			}
 			else {
@@ -266,16 +266,10 @@ namespace Mulder.Base.DataSources
 			return CleanedIdentifier(identifier);
 		}
 		
-		string CleanedIdentifier(string identifier)
+		string CleanedIdentifier(string dirtyIdentifier)
 		{
-			return NormalizeSeparatorChars(identifierCleanerRegex.Replace(string.Format("/{0}/", identifier.Trim()), "/"));
+			return identifierCleanerRegex.Replace(string.Format("/{0}/", dirtyIdentifier.Trim().Replace('\\', '/')), "/");
 		}
-		
-		public static string NormalizeSeparatorChars(string identifier)
-		{
-			return identifier.Replace('\\', '/');
-		}
-
 		
 		DateTime GetModificationTime(string contentFileName, string metaFileName)
 		{
