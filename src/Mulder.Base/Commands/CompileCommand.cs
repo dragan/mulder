@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Diagnostics;
 
 using Mulder.Base;
@@ -41,7 +42,7 @@ namespace Mulder.Base.Commands
 			
 			stopWatch.Stop();
 			
-			log.InfoMessage("Site compiled in {0}s.", stopWatch.Elapsed.Seconds);
+			log.InfoMessage("Site compiled in {0}s.", stopWatch.Elapsed.TotalSeconds.ToString("0.000", CultureInfo.InvariantCulture));
 			
 			return ExitCode.Success;
 		}

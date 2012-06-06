@@ -70,7 +70,7 @@ namespace Mulder.Tests.Base.Commands
 			{
 				compileCommand.Execute(new string[] {});
 				
-				log.Received().InfoMessage("Site compiled in {0}s.", Arg.Any<int>());
+				log.Received().InfoMessage("Site compiled in {0}s.", Arg.Any<string>());
 			}
 			
 			[Test]
