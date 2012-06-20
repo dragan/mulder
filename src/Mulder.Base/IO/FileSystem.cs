@@ -104,6 +104,8 @@ namespace Mulder.Base.IO
 		
 		public void Copy(string source, string destination)
 		{
+			CreateDirectory(Path.GetDirectoryName(destination));
+			
 			File.Copy(source, destination, true);
 		}
 	}
