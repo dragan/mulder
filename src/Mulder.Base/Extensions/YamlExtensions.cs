@@ -61,7 +61,7 @@ namespace Mulder.Base.Extensions
 			
 			string yaml = matches[0].Groups[1].Value;
 			
-			return yaml.DeserializeYaml()[0] as IDictionary<string, object>;
+			return yaml.DeserializeYaml()[0] as IDictionary<string, object> ?? new Dictionary<string, object>();
 		}
 		
 		public static string ExcludeYamlHeader(this string text)
