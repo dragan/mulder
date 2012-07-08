@@ -72,7 +72,7 @@ namespace Mulder.Base.Compilation
 		{
 			foreach (StaticFile staticFile in staticFiles) {
 				
-				ExecuteFilters(staticFile);
+				ExecuteFilters(staticFile, site);
 				ExecuteLayoutFilter(staticFile, site);
 				
 				if (staticFile.Item.IsBinary) {
@@ -85,14 +85,15 @@ namespace Mulder.Base.Compilation
 			}
 		}
 		
-		void ExecuteFilters(StaticFile staticFile)
+		void ExecuteFilters(StaticFile staticFile, Site site)
 		{
 			foreach (var filterName in staticFile.FilterNameQueue) {
 				IFilter filter = filterFactory.CreateFilter(filterName);
 				
 				string source = staticFile.GetLastSnapShot();
 				var arguments = new Dictionary<string, object> {
-					{"item", staticFile.Item.Meta }
+					{ "configuration", site.Configuration as IDictionary<string, object> },
+					{ "item", staticFile.Item.Meta }
 				};
 				
 				string result = filter.Execute(source, arguments);
@@ -108,6 +109,7 @@ namespace Mulder.Base.Compilation
 			
 				IFilter filter = filterFactory.CreateFilter(layoutRule.FilterName);
 				var arguments = new Dictionary<string, object> {
+					{ "configuration", site.Configuration as IDictionary<string, object> },
 					{ "layout", staticFile.Layout.Meta },
 					{ "item", staticFile.Item.Meta },
 					{ "content", staticFile.GetLastSnapShot() }
