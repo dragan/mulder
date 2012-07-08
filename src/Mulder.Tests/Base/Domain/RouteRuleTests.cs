@@ -47,7 +47,7 @@ namespace Mulder.Tests.Base.Domain
 			static Site CreateFakeSite()
 			{
 				return new Site(
-					Substitute.For<IDictionary<string, object>>(),
+					Substitute.For<IConfiguration>(),
 					Substitute.For<IEnumerable<Item>>(),
 					Substitute.For<IEnumerable<Layout>>(),
 					Substitute.For<IEnumerable<CompileRule>>(),

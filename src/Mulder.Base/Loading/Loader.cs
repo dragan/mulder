@@ -7,6 +7,7 @@ using System.Reflection;
 
 using Mulder.Base.DataSources;
 using Mulder.Base.Domain;
+using Mulder.Base.Extensions;
 using Mulder.Base.IO;
 using Mulder.Base.Logging;
 
@@ -26,10 +27,14 @@ namespace Mulder.Base.Loading
 		public Site LoadSiteData()
 		{
 			var configuration = LoadConfiguration();
-			
-			var dataSources = new List<IDataSource> {
-				new FileSystemUnified(log, fileSystem, configuration)
-			};
+
+			var dataSources = new List<IDataSource>();
+			foreach (var dataSourceMeta in configuration.DataSourceMetas) {
+				if (dataSourceMeta.Type == "filesystem_unified")
+					dataSources.Add(new FileSystemUnified(log, fileSystem, configuration));
+
+				// TODO: Instantiate and add other data sources based on configuration
+			}
 			
 			var items = LoadItems(dataSources);
 			var layouts = LoadLayouts(dataSources);
@@ -37,36 +42,17 @@ namespace Mulder.Base.Loading
 			
 			return new Site(configuration, items, layouts, rules.CompileRules, rules.RouteRules, rules.LayoutRules);
 		}
-		
-		// TODO: Modify to load config.yaml file
-		IDictionary<string, object> LoadConfiguration()
+
+		IConfiguration LoadConfiguration()
 		{
-			var configuration = new Dictionary<string, object> {
-				{
-					"OutputDirectory",
-					"public"
-				},
-				{
-					"TextExtensions",
-					new [] {
-						"htm", "html", "css", "liquid", "js", "less", "markdown", "md", "text", "xhtml", "xml"
-					}
-				},
-				{
-					"IndexFilenames",
-					new [] {
-						"index.html"
-					}
-				},
-				{
-					"DataSources",
-					new List<DataSourceInfo> {
-						new DataSourceInfo { Type = "filesystem_unified", ItemsRoot = "/", LayoutsRoot = "/" }
-					}
-				}
-			};
-			
-			return configuration;
+			// TODO: Error handling when loading configuration fails
+			if (fileSystem.FileExists("config.yaml")) {
+				string yaml = fileSystem.ReadStringFromFile("config.yaml");
+				var deserializedYaml = yaml.DeserializeYaml()[0] as IDictionary<string, object>;
+				return new Configuration(deserializedYaml);
+			}
+
+			return new Configuration(new Dictionary<string, object>());
 		}
 		
 		IList<Item> LoadItems(IEnumerable<IDataSource> dataSources)
@@ -115,13 +101,6 @@ namespace Mulder.Base.Loading
 				RouteRules = new List<RouteRule>(),
 				LayoutRules = new List<LayoutRule>()
 			};
-		}
-		
-		class DataSourceInfo
-		{
-			public string Type { get; set; }
-			public string ItemsRoot { get; set; }
-			public string LayoutsRoot { get; set; }
 		}
 		
 		class Rules

@@ -25,7 +25,7 @@ namespace Mulder.Base.Compilation
 
 		public void Compile(Site site)
 		{
-			string outputDirectory = site.Configuration["OutputDirectory"].ToString();
+			string outputDirectory = site.Configuration.OutputDirectory;
 			fileSystem.CreateDirectory(outputDirectory);
 			
 			CreateStaticFiles(site);

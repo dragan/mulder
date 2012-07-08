@@ -23,7 +23,7 @@ namespace Mulder.Tests.Base.DataSources
 			MemoryStream content;
 			ILog log;
 			IFileSystem fileSystem;
-			IDictionary<string, object> configuration;
+			IConfiguration configuration;
 			FileSystemUnified fileSystemUnified;
 			
 			[SetUp]
@@ -33,7 +33,7 @@ namespace Mulder.Tests.Base.DataSources
 				
 				log = Substitute.For<ILog>();
 				fileSystem = Substitute.For<IFileSystem>();
-				configuration = Substitute.For<IDictionary<string, object>>();
+				configuration = Substitute.For<IConfiguration>();
 				
 				fileSystemUnified = new FileSystemUnified(log, fileSystem, configuration);
 			}
@@ -69,7 +69,7 @@ namespace Mulder.Tests.Base.DataSources
 			MemoryStream content;
 			ILog log;
 			IFileSystem fileSystem;
-			IDictionary<string, object> configuration;
+			IConfiguration configuration;
 			FileSystemUnified fileSystemUnified;
 			
 			[SetUp]
@@ -79,7 +79,7 @@ namespace Mulder.Tests.Base.DataSources
 				
 				log = Substitute.For<ILog>();
 				fileSystem = Substitute.For<IFileSystem>();
-				configuration = Substitute.For<IDictionary<string, object>>();
+				configuration = Substitute.For<IConfiguration>();
 				
 				fileSystemUnified = new FileSystemUnified(log, fileSystem, configuration);
 			}
@@ -115,7 +115,7 @@ namespace Mulder.Tests.Base.DataSources
 			MemoryStream content;
 			ILog log;
 			IFileSystem fileSystem;
-			IDictionary<string, object> configuration;
+			IConfiguration configuration;
 			FileSystemUnified fileSystemUnified;
 			
 			[SetUp]
@@ -125,7 +125,7 @@ namespace Mulder.Tests.Base.DataSources
 				
 				log = Substitute.For<ILog>();
 				fileSystem = Substitute.For<IFileSystem>();
-				configuration = Substitute.For<IDictionary<string, object>>();
+				configuration = Substitute.For<IConfiguration>();
 				
 				fileSystemUnified = new FileSystemUnified(log, fileSystem, configuration);
 			}
@@ -162,7 +162,7 @@ namespace Mulder.Tests.Base.DataSources
 			MemoryStream expected;
 			ILog log;
 			IFileSystem fileSystem;
-			IDictionary<string, object> configuration;
+			IConfiguration configuration;
 			FileSystemUnified fileSystemUnified;
 			
 			[SetUp]
@@ -183,7 +183,7 @@ Item Content");
 				
 				log = Substitute.For<ILog>();
 				fileSystem = Substitute.For<IFileSystem>();
-				configuration = Substitute.For<IDictionary<string, object>>();
+				configuration = Substitute.For<IConfiguration>();
 				
 				fileSystemUnified = new FileSystemUnified(log, fileSystem, configuration);
 			}
@@ -219,7 +219,7 @@ Item Content");
 			DateTime expectedModificationTime;
 			ILog log;
 			IFileSystem fileSystem;
-			IDictionary<string, object> configuration;
+			IConfiguration configuration;
 			FileSystemUnified fileSystemUnified;
 			
 			[SetUp]
@@ -239,8 +239,8 @@ Item Content");
 				fileSystem.ReadStringFromFile(Path.Combine("content", "a", "b", "c.yaml")).Returns("num: 4");
 				fileSystem.GetLastWriteTimeUtc(Arg.Any<string>()).Returns(expectedModificationTime);
 				
-				configuration = Substitute.For<IDictionary<string, object>>();
-				configuration["TextExtensions"].Returns(new string[] { "html", "yaml" });
+				configuration = Substitute.For<IConfiguration>();
+				configuration.TextExtensions.Returns(new string[] { "html", "yaml" });
 				
 				fileSystemUnified = new FileSystemUnified(log, fileSystem, configuration);
 			}
@@ -341,7 +341,7 @@ Item Content");
 			DateTime expectedModificationTime;
 			ILog log;
 			IFileSystem fileSystem;
-			IDictionary<string, object> configuration;
+			IConfiguration configuration;
 			FileSystemUnified fileSystemUnified;
 			
 			[SetUp]
@@ -359,8 +359,8 @@ Item Content");
 				fileSystem.ReadStringFromFile(Path.Combine("layouts", "b.yaml")).Returns("num: 2");
 				fileSystem.GetLastWriteTimeUtc(Arg.Any<string>()).Returns(expectedModificationTime);
 				
-				configuration = Substitute.For<IDictionary<string, object>>();
-				configuration["TextExtensions"].Returns(new string[] { "html", "yaml" });
+				configuration = Substitute.For<IConfiguration>();
+				configuration.TextExtensions.Returns(new string[] { "html", "yaml" });
 				
 				fileSystemUnified = new FileSystemUnified(log, fileSystem, configuration);
 			}

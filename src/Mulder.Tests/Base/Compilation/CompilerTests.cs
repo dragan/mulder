@@ -44,7 +44,7 @@ namespace Mulder.Tests.Base.Compilation
 			{
 				compiler.Compile(site);
 				
-				fileSystem.Received().CreateDirectory(site.Configuration["OutputDirectory"].ToString());
+				fileSystem.Received().CreateDirectory(site.Configuration.OutputDirectory);
 			}
 			
 			[Test]
@@ -60,7 +60,7 @@ namespace Mulder.Tests.Base.Compilation
 			[Test]
 			public void should_set_path_on_each_static_file()
 			{
-				string expected = site.Configuration["OutputDirectory"].ToString() + "/file.html";
+				string expected = site.Configuration.OutputDirectory + "/file.html";
 				
 				compiler.Compile(site);
 				
@@ -151,7 +151,7 @@ namespace Mulder.Tests.Base.Compilation
 			[Test]
 			public void should_write_each_static_file_to_disk()
 			{
-				string expectedPath = site.Configuration["OutputDirectory"].ToString() + "/file.html";
+				string expectedPath = site.Configuration.OutputDirectory + "/file.html";
 				string expectedContent = "";
 				
 				compiler.Compile(site);
@@ -162,7 +162,7 @@ namespace Mulder.Tests.Base.Compilation
 			[Test]
 			public void should_log_each_static_file_created()
 			{
-				string expectedPath = site.Configuration["OutputDirectory"].ToString() + "/file.html";
+				string expectedPath = site.Configuration.OutputDirectory + "/file.html";
 				
 				compiler.Compile(site);
 				
@@ -171,8 +171,8 @@ namespace Mulder.Tests.Base.Compilation
 			
 			static Site LoadFakeSite()
 			{
-				var configuration = Substitute.For<IDictionary<string, object>>();
-				configuration["OutputDirectory"].Returns("SomeOutputDirectory");
+				var configuration = Substitute.For<IConfiguration>();
+				configuration.OutputDirectory.Returns("SomeOutputDirectory");
 				
 				var items = new List<Item> {
 					new Item("/a/", false, "item-content", new Dictionary<string, object>(), DateTime.Now),

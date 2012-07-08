@@ -24,7 +24,7 @@ namespace Mulder.Tests.Base.Domain
 			{
 				modificationTime = DateTime.UtcNow;
 				
-				var configuration = Substitute.For<IDictionary<string, object>>();
+				var configuration = Substitute.For<IConfiguration>();
 				var items = CreateItems(modificationTime);
 				var layouts = Substitute.For<IEnumerable<Layout>>();
 				var compileRules = Substitute.For<IEnumerable<CompileRule>>();

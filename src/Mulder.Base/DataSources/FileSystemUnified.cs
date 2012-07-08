@@ -19,14 +19,14 @@ namespace Mulder.Base.DataSources
 		
 		readonly ILog log;
 		readonly IFileSystem fileSystem;
-		readonly IDictionary<string, object> configuration;
+		readonly IConfiguration configuration;
 		readonly Regex identifierCleanerRegex;
 		
 		public FileSystemUnified(ILog log, IFileSystem fileSystem) : this(log, fileSystem, null)
 		{
 		}
 		
-		public FileSystemUnified(ILog log, IFileSystem fileSystem, IDictionary<string, object> configuration)
+		public FileSystemUnified(ILog log, IFileSystem fileSystem, IConfiguration configuration)
 		{
 			this.log = log;
 			this.fileSystem = fileSystem;
@@ -228,7 +228,7 @@ namespace Mulder.Base.DataSources
 		bool IsBinary(string fileName)
 		{
 			string extensionWithoutDot = Path.GetExtension(fileName).Substring(1);
-			string[] textExtensions = configuration["TextExtensions"] as string[];
+			IEnumerable<string> textExtensions = configuration.TextExtensions;
 			return !textExtensions.Contains(extensionWithoutDot);
 		}
 		

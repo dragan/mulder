@@ -25,6 +25,8 @@ namespace Mulder.Tests.Base.Loading
 			[SetUp]
 			public void SetUp()
 			{
+				string fakeConfigFile = @"property_one: one";
+
 				string fakeRulesFile = @"Compile(""*"", (context) => {
 	// Do Nothing
 });
@@ -35,10 +37,28 @@ Layout(""*"", ""layout-filter"");";
 				
 				log = Substitute.For<ILog>();
 				fileSystem = Substitute.For<IFileSystem>();
+				fileSystem.FileExists("config.yaml").Returns(true);
+				fileSystem.ReadStringFromFile("config.yaml").Returns(fakeConfigFile);
 				fileSystem.FileExists("Rules").Returns(true);
 				fileSystem.ReadStringFromFile("Rules").Returns(fakeRulesFile);
 				
 				loader = new Loader(log, fileSystem);
+			}
+
+			[Test]
+			public void should_check_if_a_config_file_exists()
+			{
+				loader.LoadSiteData();
+				
+				fileSystem.Received().FileExists("config.yaml");
+			}
+
+			[Test]
+			public void should_read_config_file()
+			{
+				loader.LoadSiteData();
+				
+				fileSystem.Received().ReadStringFromFile("config.yaml");
 			}
 			
 			[Test]
@@ -47,10 +67,7 @@ Layout(""*"", ""layout-filter"");";
 				Site site = loader.LoadSiteData();
 				
 				site.Configuration.ShouldNotBe(null);
-				site.Configuration.ShouldContainKey("OutputDirectory");
-				site.Configuration.ShouldContainKey("TextExtensions");
-				site.Configuration.ShouldContainKey("IndexFilenames");
-				site.Configuration.ShouldContainKey("DataSources");
+				site.Configuration["property_one"].ToString().ShouldBe("one");
 			}
 			
 			[Test]
