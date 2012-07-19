@@ -55,9 +55,9 @@ var BIN_DIR = "${ARTIFACTS_DIR}/bin"
   directory create="${BIN_DIR}"
   
   test if='IsMono'
-    exec-clr program="tools/ilrepack.1.9/ILRepack.exe" commandline="/out:${BIN_DIR}/Mulder.exe /targetplatform:v4 ${OUTPUT_DIR}/Mulder.Cli.exe ${other_assemblies_arg}"
+    exec-clr program="tools/ilrepack.1.9/ILRepack.exe" commandline="/out:${BIN_DIR}/Mulder.exe /targetplatform:v4 /copyattrs ${OUTPUT_DIR}/Mulder.Cli.exe ${other_assemblies_arg}"
   else
-    exec-clr program="tools/ilmerge/ILMerge.exe" commandline="/out:${BIN_DIR}/Mulder.exe /targetplatform:v4 ${OUTPUT_DIR}/Mulder.Cli.exe ${other_assemblies_arg}"
+    exec-clr program="tools/ilmerge/ILMerge.exe" commandline="/out:${BIN_DIR}/Mulder.exe /targetplatform:v4 /copyattrs ${OUTPUT_DIR}/Mulder.Cli.exe ${other_assemblies_arg}"
         
 #clean
   directory delete="${ARTIFACTS_DIR}"
