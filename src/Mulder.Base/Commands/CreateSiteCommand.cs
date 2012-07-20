@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text;
 
 using Mulder.Base.DataSources;
 using Mulder.Base.IO;
@@ -10,12 +11,15 @@ namespace Mulder.Base.Commands
 {
 	public class CreateSiteCommand : ICommand
 	{
-		static readonly string usage = "create site [path]";
+		const string usage = "usage: mulder create site <path>";
+		const string summary = "create a site";
+		const string description = "Create a new site at the given path. The site will use the filesystem_unified data source by default.";
+
 		readonly ILog log;
 		readonly IFileSystem fileSystem;
 		readonly IDataSource dataSource;
-		
-		public string Usage { get { return usage; } }
+
+		public string Summary { get { return summary; } }
 		
 		public CreateSiteCommand(ILog log, IFileSystem fileSystem, IDataSource dataSource)
 		{
@@ -27,7 +31,7 @@ namespace Mulder.Base.Commands
 		public ExitCode Execute(string[] arguments)
 		{
 			if (arguments.Length != 1 || string.IsNullOrEmpty(arguments[0])) {
-				log.ErrorMessage("usage: {0}", Usage);
+				log.ErrorMessage(usage);
 				return ExitCode.Error;
 			}
 			
@@ -46,6 +50,22 @@ namespace Mulder.Base.Commands
 			
 			log.InfoMessage("Created a blank mulder site at '{0}'. Enjoy!", path);
 			
+			return ExitCode.Success;
+		}
+
+		public ExitCode ShowHelp(string[] arguments)
+		{
+			var help = new StringBuilder();
+
+			help.AppendLine("");
+			help.AppendLine(usage);
+			help.AppendLine("");
+			help.AppendLine(summary);
+			help.AppendLine("");
+			help.AppendLine("    " + description);
+
+			log.InfoMessage(help.ToString());
+
 			return ExitCode.Success;
 		}
 		

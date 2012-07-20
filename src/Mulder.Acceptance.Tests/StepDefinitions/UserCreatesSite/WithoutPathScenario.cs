@@ -38,7 +38,7 @@ namespace Mulder.Acceptance.Tests.StepDefinitions.UserCreatesSite
 		[Then(@"I should see usage message")]
 		public void Then_I_should_see_usage_message()
 		{
-			writer.ToString().ShouldContain("usage: create site [path]");
+			writer.ToString().ShouldContain("usage: mulder create site <path>");
 		}
 		
 		[Then(@"I should see mulder terminate with an error exit code")]

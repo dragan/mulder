@@ -34,7 +34,7 @@ namespace Mulder.Tests.Base.Commands
 			{
 				createCommand.Execute(new string[] {});
 				
-				log.Received().ErrorMessage("usage: {0}", createCommand.Usage);
+				log.Received().ErrorMessage(Arg.Is<string>(s => s == Messages.Usage));
 			}
 			
 			[Test]
@@ -71,7 +71,7 @@ namespace Mulder.Tests.Base.Commands
 			{
 				createCommand.Execute(new string[] { invalidArgument });
 				
-				log.Received().ErrorMessage("usage: {0}", createCommand.Usage);
+				log.Received().ErrorMessage(Arg.Is<string>(s => s == Messages.Usage));
 			}
 			
 			[Test]
@@ -134,6 +134,137 @@ namespace Mulder.Tests.Base.Commands
 				
 				exitCode.ShouldBe(ExitCode.Success);
 			}
+		}
+
+		[TestFixture]
+		public class when_showing_help
+		{
+			ILog log;
+			IDictionary<string, ICommand> subCommands;
+			CreateCommand createCommand;
+
+			[SetUp]
+			public void SetUp()
+			{
+				log = Substitute.For<ILog>();
+
+				subCommands = Substitute.For<IDictionary<string, ICommand>>();
+
+				createCommand = new CreateCommand(log, subCommands);
+			}
+
+			[Test]
+			public void should_log_help()
+			{
+				createCommand.ShowHelp(new string[] {});
+
+				log.Received().InfoMessage(Messages.Help);
+			}
+
+			[Test]
+			public void should_return_success_exit_code()
+			{
+				ExitCode exitCode = createCommand.ShowHelp(new string[] {});
+
+				exitCode.ShouldBe(ExitCode.Success);
+			}
+		}
+
+		[TestFixture]
+		public class when_showing_help_for_subcommand
+		{
+			string subCommandArgument;
+			ICommand subCommand;
+			ILog log;
+			IDictionary<string, ICommand> subCommands;
+			CreateCommand createCommand;
+
+			[SetUp]
+			public void SetUp()
+			{
+				subCommandArgument = "subCommand";
+
+				subCommand = Substitute.For<ICommand>();
+				subCommand.ShowHelp(Arg.Any<string[]>()).Returns(ExitCode.Success);
+
+				log = Substitute.For<ILog>();
+
+				subCommands = Substitute.For<IDictionary<string, ICommand>>();
+				subCommands.ContainsKey(subCommandArgument).Returns(true);
+				subCommands[subCommandArgument] = subCommand;
+
+				createCommand = new CreateCommand(log, subCommands);
+			}
+
+			[Test]
+			public void should_call_show_help_on_subcommand()
+			{
+				createCommand.ShowHelp(new string[] { subCommandArgument });
+
+				subCommand.Received().ShowHelp(Arg.Any<string[]>());
+			}
+
+			[Test]
+			public void should_return_sub_command_exit_code()
+			{
+				ExitCode exitCode = createCommand.ShowHelp(new string[] { subCommandArgument });
+				
+				exitCode.ShouldBe(ExitCode.Success);
+			}
+		}
+
+		[TestFixture]
+		public class when_requesting_help_with_invalid_subcommand_argument
+		{
+			string invalidSubCommandArgument;
+			ILog log;
+			IDictionary<string, ICommand> subCommands;
+			CreateCommand createCommand;
+			
+			[SetUp]
+			public void SetUp()
+			{
+				invalidSubCommandArgument = "blah";
+
+				log = Substitute.For<ILog>();
+
+				subCommands = Substitute.For<IDictionary<string, ICommand>>();
+				subCommands.ContainsKey(invalidSubCommandArgument).Returns(false);
+
+				createCommand = new CreateCommand(log, subCommands);
+			}
+			
+			[Test]
+			public void should_log_error_message()
+			{
+				createCommand.ShowHelp(new string[] { invalidSubCommandArgument });
+
+				log.Received().ErrorMessage(Messages.InvalidCommandMessage, invalidSubCommandArgument);
+			}
+			
+			[Test]
+			public void should_return_error_exit_code()
+			{
+				ExitCode exitCode = createCommand.ShowHelp(new string[] { invalidSubCommandArgument });
+				
+				exitCode.ShouldBe(ExitCode.Error);
+			}
+		}
+
+		public class Messages
+		{
+			public const string Usage = "usage: mulder create <object> [<args>]";
+			public const string Help = @"
+usage: mulder create <object> [<args>]
+
+create a mulder object
+
+    Create different objects within mulder using this command.
+
+objects:
+
+";
+			public const string InvalidCommandMessage = "mulder: unknown command '{0}'. Run 'mulder help' for more info.";
 		}
 	}
 }

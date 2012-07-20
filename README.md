@@ -26,7 +26,7 @@ configured output directory.
 
 Shows the help for using Mulder's command line interface by printing out available commands.
 
-    $ mulder <command> help
+    $ mulder help <command>
 
 Shows the help for a specific command by printing out the name, usage, description, and options.
 

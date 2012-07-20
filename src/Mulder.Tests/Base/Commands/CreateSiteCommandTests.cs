@@ -38,7 +38,7 @@ namespace Mulder.Tests.Base.Commands
 			{
 				createSiteCommand.Execute(new string[] {});
 				
-				log.Received().ErrorMessage("usage: {0}", createSiteCommand.Usage);
+				log.Received().ErrorMessage(Arg.Is<string>(s => s == Messages.Usage));
 			}
 			
 			[Test]
@@ -73,7 +73,7 @@ namespace Mulder.Tests.Base.Commands
 			{
 				createSiteCommand.Execute(new string[] { "" });
 				
-				log.Received().ErrorMessage("usage: {0}", createSiteCommand.Usage);
+				log.Received().ErrorMessage(Arg.Is<string>(s => s == Messages.Usage));
 			}
 			
 			[Test]
@@ -244,6 +244,53 @@ namespace Mulder.Tests.Base.Commands
 				
 				log.Received().InfoMessage("Created a blank mulder site at '{0}'. Enjoy!", validPath);
 			}
+		}
+
+		[TestFixture]
+		public class when_showing_help
+		{
+			ILog log;
+			IFileSystem fileSystem;
+			IDataSource dataSource;
+			CreateSiteCommand createSiteCommand;
+
+			[SetUp]
+			public void SetUp()
+			{
+				log = Substitute.For<ILog>();
+				fileSystem = Substitute.For<IFileSystem>();
+				dataSource = Substitute.For<IDataSource>();
+
+				createSiteCommand = new CreateSiteCommand(log, fileSystem, dataSource);
+			}
+
+			[Test]
+			public void should_log_help()
+			{
+				createSiteCommand.ShowHelp(new string[] {});
+
+				log.Received().InfoMessage(Messages.Help);
+			}
+
+			[Test]
+			public void should_return_success_exit_code()
+			{
+				ExitCode exitCode = createSiteCommand.ShowHelp(new string[] {});
+
+				exitCode.ShouldBe(ExitCode.Success);
+			}
+		}
+
+		public class Messages
+		{
+			public const string Usage = "usage: mulder create site <path>";
+			public const string Help = @"
+usage: mulder create site <path>
+
+create a site
+
+    Create a new site at the given path. The site will use the filesystem_unified data source by default.
+";
 		}
 	}
 }

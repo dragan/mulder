@@ -81,5 +81,51 @@ namespace Mulder.Tests.Base.Commands
 				exitCode.ShouldBe(ExitCode.Success);
 			}
 		}
+
+		[TestFixture]
+		public class when_showing_help
+		{
+			ILog log;
+			ILoader loader;
+			ICompiler compiler;
+			CompileCommand compileCommand;
+
+			[SetUp]
+			public void SetUp()
+			{
+				log = Substitute.For<ILog>();
+				loader = Substitute.For<ILoader>();
+				compiler = Substitute.For<ICompiler>();
+				
+				compileCommand = new CompileCommand(log, loader, compiler);
+			}
+
+			[Test]
+			public void should_log_help()
+			{
+				compileCommand.ShowHelp(new string[] {});
+
+				log.Received().InfoMessage(Messages.Help);
+			}
+
+			[Test]
+			public void should_return_success_exit_code()
+			{
+				ExitCode exitCode = compileCommand.ShowHelp(new string[] {});
+
+				exitCode.ShouldBe(ExitCode.Success);
+			}
+		}
+
+		public class Messages
+		{
+			public const string Help = @"
+usage: mulder compile
+
+compile items of this site
+
+    Compile all items of the current site.
+";
+		}
 	}
 }

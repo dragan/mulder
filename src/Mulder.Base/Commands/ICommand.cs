@@ -4,7 +4,8 @@ namespace Mulder.Base.Commands
 {
 	public interface ICommand
 	{
-		string Usage { get; }
+		string Summary { get; }
 		ExitCode Execute(string[] arguments);
+		ExitCode ShowHelp(string[] arguments);
 	}
 }

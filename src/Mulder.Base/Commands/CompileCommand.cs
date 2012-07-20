@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Diagnostics;
+using System.Text;
 
 using Mulder.Base;
 using Mulder.Base.Compilation;
@@ -12,13 +13,15 @@ namespace Mulder.Base.Commands
 {
 	public class CompileCommand : ICommand
 	{
-		static readonly string usage = "compile";
-		
+		const string usage = "usage: mulder compile";
+		const string summary = "compile items of this site";
+		const string description = "Compile all items of the current site.";
+
 		readonly ILog log;
 		readonly ILoader loader;
 		readonly ICompiler compiler;
-		
-		public string Usage { get { return usage; } }
+
+		public string Summary { get { return summary; } }
 		
 		public CompileCommand(ILog log, ILoader loader, ICompiler compiler)
 		{
@@ -44,6 +47,22 @@ namespace Mulder.Base.Commands
 			
 			log.InfoMessage("Site compiled in {0}s.", stopWatch.Elapsed.TotalSeconds.ToString("0.000", CultureInfo.InvariantCulture));
 			
+			return ExitCode.Success;
+		}
+
+		public ExitCode ShowHelp(string[] arguments)
+		{
+			var help = new StringBuilder();
+
+			help.AppendLine("");
+			help.AppendLine(usage);
+			help.AppendLine("");
+			help.AppendLine(summary);
+			help.AppendLine("");
+			help.AppendLine("    " + description);
+
+			log.InfoMessage(help.ToString());
+
 			return ExitCode.Success;
 		}
 	}

@@ -89,6 +89,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Filters\LessFilter.cs" />
     <Compile Include="Domain\Configuration.cs" />
+    <Compile Include="Options.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
