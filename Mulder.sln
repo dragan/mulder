@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{C5DDC305-0B12-4E41-9AD7-E7A2974B685A}"
+	ProjectSection(SolutionItems) = preProject
+		sake.cmd = sake.cmd
+		sake.sh = sake.sh
+		Sakefile.shade = Sakefile.shade
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{890674E8-6A33-4781-9978-4F616FE41C02}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mulder.Cli", "src\Mulder.Cli\Mulder.Cli.csproj", "{AC55DEED-5331-4EEB-9AEB-0037C8C91749}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mulder.Base", "src\Mulder.Base\Mulder.Base.csproj", "{E3F2876A-06C9-4EFD-ADF8-2904B535D687}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mulder.Tests", "src\Mulder.Tests\Mulder.Tests.csproj", "{6BE40C4A-9B7D-4129-8F3D-B1066D752C60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mulder.Acceptance.Tests", "src\Mulder.Acceptance.Tests\Mulder.Acceptance.Tests.csproj", "{4425824D-366E-4E0F-84E1-7A22EF93D4B2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4425824D-366E-4E0F-84E1-7A22EF93D4B2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4425824D-366E-4E0F-84E1-7A22EF93D4B2}.Debug|x86.Build.0 = Debug|Any CPU
+		{4425824D-366E-4E0F-84E1-7A22EF93D4B2}.Release|x86.ActiveCfg = Release|Any CPU
+		{4425824D-366E-4E0F-84E1-7A22EF93D4B2}.Release|x86.Build.0 = Release|Any CPU
+		{6BE40C4A-9B7D-4129-8F3D-B1066D752C60}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6BE40C4A-9B7D-4129-8F3D-B1066D752C60}.Debug|x86.Build.0 = Debug|Any CPU
+		{6BE40C4A-9B7D-4129-8F3D-B1066D752C60}.Release|x86.ActiveCfg = Release|Any CPU
+		{6BE40C4A-9B7D-4129-8F3D-B1066D752C60}.Release|x86.Build.0 = Release|Any CPU
+		{AC55DEED-5331-4EEB-9AEB-0037C8C91749}.Debug|x86.ActiveCfg = Debug|x86
+		{AC55DEED-5331-4EEB-9AEB-0037C8C91749}.Debug|x86.Build.0 = Debug|x86
+		{AC55DEED-5331-4EEB-9AEB-0037C8C91749}.Release|x86.ActiveCfg = Release|x86
+		{AC55DEED-5331-4EEB-9AEB-0037C8C91749}.Release|x86.Build.0 = Release|x86
+		{E3F2876A-06C9-4EFD-ADF8-2904B535D687}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E3F2876A-06C9-4EFD-ADF8-2904B535D687}.Debug|x86.Build.0 = Debug|Any CPU
+		{E3F2876A-06C9-4EFD-ADF8-2904B535D687}.Release|x86.ActiveCfg = Release|Any CPU
+		{E3F2876A-06C9-4EFD-ADF8-2904B535D687}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{890674E8-6A33-4781-9978-4F616FE41C02} = {C5DDC305-0B12-4E41-9AD7-E7A2974B685A}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = src\Mulder.Cli\Mulder.Cli.csproj
+	EndGlobalSection
+EndGlobal

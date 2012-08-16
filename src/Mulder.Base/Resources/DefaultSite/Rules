@@ -1,0 +1,40 @@
+// A few helpful tips about the Rules file:
+//
+// * The string given to #compile and #route are matching patterns for
+//   identifiers--not for paths. Therefore, you can’t match on extension.
+//
+// * The order of rules is important: for each item, only the first matching
+//   rule is applied.
+//
+// * Item identifiers start and end with a slash (e.g. “/about/” for the file
+//   “content/about.html”). To select all children, grandchildren, … of an
+//   item, use the pattern “/about/*/”; “/about/*” will also select the parent,
+//   because “*” matches zero or more characters.
+
+Compile("/stylesheet/", (context) => {
+  // don’t filter or layout
+});
+
+Compile("*", (context) => {
+  if (context.Item.IsBinary) {
+    // don’t filter binary items
+  } else {
+    context.WithFilter("markdown").WithLayout("default");
+  }
+});
+
+Route("/stylesheet/", (context) => {
+  return "/style.css";
+});
+
+Route("*", (context) => {
+  if (context.Item.IsBinary) {
+    // Write item with identifier /foo/ to /foo.ext
+    return context.Item.Identifier.Chop() + context.Item.Meta["extension"];
+  } else {
+    // Write item with identifier /foo/ to /foo/index.html
+    return context.Item.Identifier + "index.html";
+  }
+});
+
+Layout("*", "liquid");

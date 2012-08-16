@@ -1,0 +1,71 @@
+use namespace="System"
+use namespace="System.Collections.Generic"
+use namespace="System.IO"
+use import="Files"
+
+var VERSION = "0.1.0"
+var VERSION_FULL = "${VERSION}"
+
+var PRODUCT = "Mulder"
+var DESCRIPTION = "A simple static site generator written in C#."
+var AUTHORS = "Dale Ragan"
+var COPYRIGHT = "Copyright 2012 Dale Ragan"
+var LICENSE_URL = "https://github.com/dragan/mulder/raw/HEAD/LICENSE"
+var PROJECT_URL = "https://github.com/dragan/mulder"
+
+var CONFIGURATION = "Release"
+
+var ARTIFACTS_DIR = "${Directory.GetCurrentDirectory()}/artifacts"
+var OUTPUT_DIR = "${ARTIFACTS_DIR}/output"
+var BIN_DIR = "${ARTIFACTS_DIR}/bin"
+
+#default .clean .build .test
+
+#update-assemblyinfo
+  assemblyinfo updateFile="src/CommonAssemblyInfo.cs" assemblyVersion="${VERSION}" assemblyFileVersion="${VERSION}" assemblyInformationalVersion="${VERSION_FULL}"
+
+#build .clean
+  build projectFile="Mulder.sln" outputDir="${OUTPUT_DIR}" configuration="${CONFIGURATION}"
+
+#test .build
+  nunit testFile="${OUTPUT_DIR}/Mulder.Tests.dll" extra="-labels -xml=${OUTPUT_DIR}/TestResults.xml" nunitVersion="2.5.10.11092"
+
+#test-acceptance .build
+  nunit testFile="${OUTPUT_DIR}/Mulder.Acceptance.Tests.dll" extra="-nodots -labels -xml=${OUTPUT_DIR}/AcceptanceTestResults.xml" nunitVersion="2.5.10.11092"
+
+  exec-clr program="packages/SpecFlow.1.8.1/tools/specflow.exe" commandline="nunitexecutionreport src/Mulder.Acceptance.Tests/Mulder.Acceptance.Tests.csproj /xmlTestResult:${OUTPUT_DIR}/AcceptanceTestResults.xml /out:${OUTPUT_DIR}/AcceptanceTestResults.html"
+
+#test-all .test .test-acceptance
+
+#merge
+  @{
+    var assemblies = new List<string>(Files.BasePath(OUTPUT_DIR).Include("*.dll", "*.pdb")
+      .Where(path => !Regex.Match(path, "nunit").Success)
+      .Where(path => !Regex.Match(path, ".Tests").Success)
+      .Where(path => !Regex.Match(path, "NSubstitute").Success)
+      .Where(path => !Regex.Match(path, "Shouldly").Success)
+      .Where(path => !Regex.Match(path, "TechTalk").Success));
+    
+    for (int i = 0; i < assemblies.Count; i++)
+      assemblies[i] = OUTPUT_DIR + "/" + assemblies[i];
+    
+    var other_assemblies_arg = string.Join(" ", assemblies);
+  }
+  
+  directory create="${BIN_DIR}"
+  
+  test if='IsMono'
+    exec-clr program="tools/ilrepack.1.9/ILRepack.exe" commandline="/out:${BIN_DIR}/Mulder.exe /targetplatform:v4 /copyattrs ${OUTPUT_DIR}/Mulder.Cli.exe ${other_assemblies_arg}"
+  else
+    exec-clr program="tools/ilmerge/ILMerge.exe" commandline="/out:${BIN_DIR}/Mulder.exe /targetplatform:v4 /copyattrs ${OUTPUT_DIR}/Mulder.Cli.exe ${other_assemblies_arg}"
+        
+#clean
+  directory delete="${ARTIFACTS_DIR}"
+  directory delete="src/Mulder.Cli/bin"
+  directory delete="src/Mulder.Cli/obj"
+  directory delete="src/Mulder.Base/bin"
+  directory delete="src/Mulder.Base/obj"
+  directory delete="src/Mulder.Tests/bin"
+  directory delete="src/Mulder.Tests/obj"
+  directory delete="src/Mulder.Acceptance.Tests/bin"
+  directory delete="src/Mulder.Acceptance.Tests/obj"
