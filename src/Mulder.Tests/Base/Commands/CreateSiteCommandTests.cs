@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 
 using NSubstitute;
 using NUnit.Framework;
@@ -269,7 +270,7 @@ namespace Mulder.Tests.Base.Commands
 			{
 				createSiteCommand.ShowHelp(new string[] {});
 
-				log.Received().InfoMessage(Messages.Help);
+				log.Received().InfoMessage(Messages.BuildHelpMessage());
 			}
 
 			[Test]
@@ -284,13 +285,20 @@ namespace Mulder.Tests.Base.Commands
 		public class Messages
 		{
 			public const string Usage = "usage: mulder create site <path>";
-			public const string Help = @"
-usage: mulder create site <path>
 
-create a site
+			public static string BuildHelpMessage()
+			{
+				var sb = new StringBuilder();
 
-    Create a new site at the given path. The site will use the filesystem_unified data source by default.
-";
+				sb.AppendLine();
+				sb.AppendLine("usage: mulder create site <path>");
+				sb.AppendLine();
+				sb.AppendLine("create a site");
+				sb.AppendLine();
+				sb.AppendLine("    Create a new site at the given path. The site will use the filesystem_unified data source by default.");
+
+				return sb.ToString();
+			}
 		}
 	}
 }

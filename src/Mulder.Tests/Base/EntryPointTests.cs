@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 using NSubstitute;
 using NUnit.Framework;
@@ -114,7 +115,7 @@ namespace Mulder.Tests.Base
 			{
 				entryPoint.Run(new string[] { helpOptionArgumentShort });
 
-				log.Received().InfoMessage(Messages.Help);
+				log.Received().InfoMessage(Messages.BuildHelpMessage());
 			}
 			
 			[Test]
@@ -130,7 +131,7 @@ namespace Mulder.Tests.Base
 			{
 				entryPoint.Run(new string[] { helpOptionArgumentQuestionMark });
 
-				log.Received().InfoMessage(Messages.Help);
+				log.Received().InfoMessage(Messages.BuildHelpMessage());
 			}
 
 			[Test]
@@ -146,7 +147,7 @@ namespace Mulder.Tests.Base
 			{
 				entryPoint.Run(new string[] { helpOptionArgumentLong });
 
-				log.Received().InfoMessage(Messages.Help);
+				log.Received().InfoMessage(Messages.BuildHelpMessage());
 			}
 			
 			[Test]
@@ -162,7 +163,7 @@ namespace Mulder.Tests.Base
 			{
 				entryPoint.Run(new string[] { helpCommand });
 
-				log.Received().InfoMessage(Messages.Help);
+				log.Received().InfoMessage(Messages.BuildHelpMessage());
 			}
 			
 			[Test]
@@ -307,20 +308,27 @@ namespace Mulder.Tests.Base
 		{
 			public const string NoArgumentsMessage = "mulder: You must provide a command. Run 'mulder help' for more info.";
 			public const string InvalidCommandMessage = "mulder: unknown command '{0}'. Run 'mulder help' for more info.";
-			public const string Help = @"
-mulder, a simple static site generator written in C#
 
-usage: mulder [options] <command> [<args>]
+			public static string BuildHelpMessage()
+			{
+				var sb = new StringBuilder();
 
-commands:
+				sb.AppendLine();
+				sb.AppendLine("mulder, a simple static site generator written in C#");
+				sb.AppendLine();
+				sb.AppendLine("usage: mulder [options] <command> [<args>]");
+				sb.AppendLine();
+				sb.AppendLine("commands:");
+				sb.AppendLine();
+				sb.AppendLine();
+				sb.AppendLine("    See 'mulder help <command>' for more information on a specific command.");
+				sb.AppendLine();
+				sb.AppendLine("options:");
+				sb.AppendLine();
+				sb.AppendLine("    -h -? --help    show the help message and quit");
 
-
-    See 'mulder help <command>' for more information on a specific command.
-
-options:
-
-    -h -? --help    show the help message and quit
-";
+				return sb.ToString();
+			}
 		}
 	}
 }

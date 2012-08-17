@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 using NSubstitute;
 using NUnit.Framework;
@@ -158,7 +159,7 @@ namespace Mulder.Tests.Base.Commands
 			{
 				createCommand.ShowHelp(new string[] {});
 
-				log.Received().InfoMessage(Messages.Help);
+				log.Received().InfoMessage(Messages.BuildHelpMessage());
 			}
 
 			[Test]
@@ -254,16 +255,24 @@ namespace Mulder.Tests.Base.Commands
 		public class Messages
 		{
 			public const string Usage = "usage: mulder create <object> [<args>]";
-			public const string Help = @"
-usage: mulder create <object> [<args>]
 
-create a mulder object
+			public static string BuildHelpMessage()
+			{
+				var sb = new StringBuilder();
 
-    Create different objects within mulder using this command.
+				sb.AppendLine();
+				sb.AppendLine("usage: mulder create <object> [<args>]");
+				sb.AppendLine();
+				sb.AppendLine("create a mulder object");
+				sb.AppendLine();
+				sb.AppendLine("    Create different objects within mulder using this command.");
+				sb.AppendLine();
+				sb.AppendLine("objects:");
+				sb.AppendLine();
 
-objects:
+				return sb.ToString();
+			}
 
-";
 			public const string InvalidCommandMessage = "mulder: unknown command '{0}'. Run 'mulder help' for more info.";
 		}
 	}

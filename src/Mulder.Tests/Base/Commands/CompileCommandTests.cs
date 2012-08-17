@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 using NSubstitute;
 using NUnit.Framework;
@@ -105,7 +106,7 @@ namespace Mulder.Tests.Base.Commands
 			{
 				compileCommand.ShowHelp(new string[] {});
 
-				log.Received().InfoMessage(Messages.Help);
+				log.Received().InfoMessage(Messages.BuildHelpMessage());
 			}
 
 			[Test]
@@ -119,13 +120,19 @@ namespace Mulder.Tests.Base.Commands
 
 		public class Messages
 		{
-			public const string Help = @"
-usage: mulder compile
+			public static string BuildHelpMessage()
+			{
+				var sb = new StringBuilder();
 
-compile items of this site
+				sb.AppendLine();
+				sb.AppendLine("usage: mulder compile");
+				sb.AppendLine();
+				sb.AppendLine("compile items of this site");
+				sb.AppendLine();
+				sb.AppendLine("    Compile all items of the current site.");
 
-    Compile all items of the current site.
-";
+				return sb.ToString();
+			}
 		}
 	}
 }
