@@ -39,7 +39,7 @@ var BIN_DIR = "${ARTIFACTS_DIR}/bin"
 
 #merge
   @{
-    var assemblies = new List<string>(Files.BasePath(OUTPUT_DIR).Include("*.dll", "*.pdb")
+    var assemblies = new List<string>(Files.BasePath(OUTPUT_DIR).Include("*.dll")
       .Where(path => !Regex.Match(path, "nunit").Success)
       .Where(path => !Regex.Match(path, ".Tests").Success)
       .Where(path => !Regex.Match(path, "NSubstitute").Success)
