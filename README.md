@@ -30,6 +30,10 @@ Shows the help for using Mulder's command line interface by printing out availab
 
 Shows the help for a specific command by printing out the name, usage, description, and options.
 
+If you're looking for an example, I've started converting the [Mono Monkeyguide](http://mono-project.com/Monkeyguide) 
+as an [example](https://github.com/dragan/monkeyguide) of a Mulder powered site. Hopefully it will help 
+keep the Monkeyguide up to date and make it easier for people to contribute new articles.
+
 ## Contributing
 
 Mulder uses a modified version of the popular Git branching model by [Vincent Driessen][nvie].
