@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 using Mono.Options;
@@ -19,6 +20,7 @@ namespace Mulder.Base
 		readonly OptionSet options;
 
 		bool showHelp;
+		bool showVersionInfo;
 		
 		public EntryPoint(ILog log, IDictionary<string, ICommand> commands)
 		{
@@ -26,7 +28,8 @@ namespace Mulder.Base
 			this.commands = commands;
 
 			options = new OptionSet() {
-				{ "h|?|help", "show the help message and quit", f => showHelp = true }
+				{ "h|?|help", "show the help message and quit", f => showHelp = true },
+				{ "v|version", "show version information and quit", f => showVersionInfo = true }
 			};
 		}
 		
@@ -36,6 +39,10 @@ namespace Mulder.Base
 
 			if (showHelp) {
 				return ShowHelp();
+			}
+
+			if (showVersionInfo) {
+				return ShowVersionInfo();
 			}
 
 			if (parsedArguments.Count == 0) {
@@ -115,6 +122,16 @@ namespace Mulder.Base
 			}
 
 			return commands[commandName].ShowHelp(commandArguments);
+		}
+
+		ExitCode ShowVersionInfo()
+		{
+			var assembly = Assembly.GetExecutingAssembly();
+			var infoVersions = (AssemblyInformationalVersionAttribute[]) assembly.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false);
+
+			log.InfoMessage(string.Format("mulder {0} © 2012 Dale Ragan.", infoVersions[0].InformationalVersion));
+
+			return ExitCode.Success;
 		}
 	}
 }

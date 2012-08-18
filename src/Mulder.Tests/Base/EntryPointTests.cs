@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 using NSubstitute;
@@ -304,6 +305,60 @@ namespace Mulder.Tests.Base
 			}
 		}
 
+		[TestFixture]
+		public class when_running_with_version_option_argument
+		{
+			string versionOptionArgumentShort;
+			string versionOptionArgumentLong;
+			ILog log;
+			IDictionary<string, ICommand> commands;
+			EntryPoint entryPoint;
+			
+			[SetUp]
+			public void SetUp()
+			{
+				versionOptionArgumentShort = "-v";
+				versionOptionArgumentLong = "--version";
+
+				log = Substitute.For<ILog>();
+				commands = Substitute.For<IDictionary<string, ICommand>>();
+
+				entryPoint = new EntryPoint(log, commands);
+			}
+
+			[Test]
+			public void should_log_help_message_for_short_argument()
+			{
+				entryPoint.Run(new string[] { versionOptionArgumentShort });
+
+				log.Received().InfoMessage(Messages.BuildVersionMessage());
+			}
+			
+			[Test]
+			public void should_return_success_exit_code_for_short_argument()
+			{
+				ExitCode exitCode = entryPoint.Run(new string[] { versionOptionArgumentShort });
+				
+				exitCode.ShouldBe(ExitCode.Success);
+			}
+
+			[Test]
+			public void should_log_help_message_for_long_argument()
+			{
+				entryPoint.Run(new string[] { versionOptionArgumentLong });
+
+				log.Received().InfoMessage(Messages.BuildVersionMessage());
+			}
+
+			[Test]
+			public void should_return_success_exit_code_for_long_argument()
+			{
+				ExitCode exitCode = entryPoint.Run(new string[] { versionOptionArgumentLong });
+				
+				exitCode.ShouldBe(ExitCode.Success);
+			}
+		}
+
 		public class Messages
 		{
 			public const string NoArgumentsMessage = "mulder: You must provide a command. Run 'mulder help' for more info.";
@@ -326,8 +381,18 @@ namespace Mulder.Tests.Base
 				sb.AppendLine("options:");
 				sb.AppendLine();
 				sb.AppendLine("    -h -? --help    show the help message and quit");
+				sb.AppendLine("    -v --version    show version information and quit");
 
 				return sb.ToString();
+			}
+
+			public static string BuildVersionMessage()
+			{
+				var assembly = Assembly.GetExecutingAssembly();
+
+				var infoVersions = (AssemblyInformationalVersionAttribute[]) assembly.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false);
+
+				return string.Format("mulder {0} © 2012 Dale Ragan.", infoVersions[0].InformationalVersion);
 			}
 		}
 	}
