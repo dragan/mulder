@@ -80,7 +80,7 @@ namespace Mulder.Tests.Base.Compilation
 				var staticFiles = site.Items.SelectMany(item => item.StaticFiles);
 				
 				foreach (StaticFile staticFile in staticFiles) {
-					string filterName = staticFile.FilterNameQueue.Dequeue();
+					string filterName = staticFile.GetNextFilterName();
 					filterName.ShouldBe("filter");
 				}
 			}

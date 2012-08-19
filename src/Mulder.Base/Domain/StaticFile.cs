@@ -11,7 +11,7 @@ namespace Mulder.Base.Domain
 		
 		public Item Item { get { return item; } }
 		public IEnumerable<string> SnapShots { get { return snapShots; } }
-		public Queue<string> FilterNameQueue { get { return filterNameQueue; } }
+		public IEnumerable<string> FilterNameQueue { get { return filterNameQueue; } }
 		
 		public string Path { get; set; }
 		public Layout Layout { get; set; }
@@ -28,6 +28,11 @@ namespace Mulder.Base.Domain
 		public void AddFilter(string filterName)
 		{
 			filterNameQueue.Enqueue(filterName);
+		}
+
+		public string GetNextFilterName()
+		{
+			return filterNameQueue.Dequeue();
 		}
 		
 		public string GetLastSnapShot()
