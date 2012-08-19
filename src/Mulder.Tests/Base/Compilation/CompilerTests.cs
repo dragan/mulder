@@ -144,7 +144,7 @@ namespace Mulder.Tests.Base.Compilation
 				
 				var staticFiles = site.Items.SelectMany(item => item.StaticFiles);
 				foreach (StaticFile staticFile in staticFiles) {
-					staticFile.SnapShots.Count.ShouldBe(3);
+					staticFile.SnapShots.Count().ShouldBe(3);
 				}
 			}
 			

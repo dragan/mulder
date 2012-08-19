@@ -6,11 +6,11 @@ namespace Mulder.Base.Domain
 	public class StaticFile : IEquatable<StaticFile>
 	{
 		readonly Item item;
-		readonly IList<string> snapShots;
+		readonly Stack<string> snapShots;
 		readonly Queue<string> filterNameQueue;
 		
 		public Item Item { get { return item; } }
-		public IList<string> SnapShots { get { return snapShots; } }
+		public IEnumerable<string> SnapShots { get { return snapShots; } }
 		public Queue<string> FilterNameQueue { get { return filterNameQueue; } }
 		
 		public string Path { get; set; }
@@ -20,8 +20,8 @@ namespace Mulder.Base.Domain
 		{
 			this.item = item;
 			
-			snapShots = new List<string> { item.Content };
-			
+			snapShots = new Stack<string>(new [] { item.Content });
+
 			filterNameQueue = new Queue<string>();
 		}
 		
@@ -32,12 +32,12 @@ namespace Mulder.Base.Domain
 		
 		public string GetLastSnapShot()
 		{
-			return snapShots[snapShots.Count - 1];
+			return snapShots.Peek();
 		}
 		
 		public void CreateSnapShot(string content)
 		{
-			snapShots.Add(content);
+			snapShots.Push(content);
 		}
 		
 		public override int GetHashCode()
