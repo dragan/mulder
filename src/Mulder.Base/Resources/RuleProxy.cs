@@ -8,9 +8,9 @@ namespace Mulder.Base.Domain
 {{
 	public class RuleProxy
 	{{
-		readonly IList<CompileRule> compileRules;
-		readonly IList<RouteRule> routeRules;
-		readonly IList<LayoutRule> layoutRules;
+		readonly Queue<CompileRule> compileRules;
+		readonly Queue<RouteRule> routeRules;
+		readonly Queue<LayoutRule> layoutRules;
 		
 		public IEnumerable<CompileRule> CompileRules {{ get {{ return compileRules; }} }}
 		public IEnumerable<RouteRule> RouteRules {{ get {{ return routeRules; }} }}
@@ -18,9 +18,9 @@ namespace Mulder.Base.Domain
 		
 		public RuleProxy()
 		{{
-			compileRules = new List<CompileRule>();
-			routeRules = new List<RouteRule>();
-			layoutRules = new List<LayoutRule>();
+			compileRules = new Queue<CompileRule>();
+			routeRules = new Queue<RouteRule>();
+			layoutRules = new Queue<LayoutRule>();
 		}}
 		
 		public void LoadRules()
@@ -30,17 +30,17 @@ namespace Mulder.Base.Domain
 		
 		void Compile(string identifierPattern, Action<RuleContext> block)
 		{{
-			compileRules.Add(new CompileRule(identifierPattern, block));
+			compileRules.Enqueue(new CompileRule(identifierPattern, block));
 		}}
 		
 		void Route(string identifierPattern, Func<RuleContext, string> block)
 		{{
-			routeRules.Add(new RouteRule(identifierPattern, block));
+			routeRules.Enqueue(new RouteRule(identifierPattern, block));
 		}}
 		
 		void Layout(string identifierPattern, string filterName)
 		{{
-			layoutRules.Add(new LayoutRule(identifierPattern, filterName));
+			layoutRules.Enqueue(new LayoutRule(identifierPattern, filterName));
 		}}
 	}}
 }}
