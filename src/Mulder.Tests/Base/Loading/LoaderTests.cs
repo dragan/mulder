@@ -7,6 +7,7 @@ using Shouldly;
 
 using Mulder.Base.Compilation;
 using Mulder.Base.Domain;
+using Mulder.Base.Exceptions;
 using Mulder.Base.IO;
 using Mulder.Base.Loading;
 using Mulder.Base.Logging;
@@ -110,6 +111,72 @@ Layout(""*"", ""layout-filter"");";
 				site.CompileRules.Count().ShouldBeGreaterThan(0);
 				site.RouteRules.Count().ShouldBeGreaterThan(0);
 				site.LayoutRules.Count().ShouldBeGreaterThan(0);
+			}
+		}
+
+		[TestFixture]
+		public class loading_with_bad_rules_file
+		{
+			ILog log;
+			IFileSystem fileSystem;
+			Loader loader;
+
+			[SetUp]
+			public void SetUp()
+			{
+				string fakeConfigFile = @"property_one: one";
+				
+				string fakeRulesFile = @"Compile(""*"", (context) => {
+	// Do Nothing
+});
+Route(""*"", (context) => {
+	return string.Empty
+});
+Layout(""*"", ""layout-filter"");";
+
+				log = Substitute.For<ILog>();
+				fileSystem = Substitute.For<IFileSystem>();
+				fileSystem.FileExists("config.yaml").Returns(true);
+				fileSystem.ReadStringFromFile("config.yaml").Returns(fakeConfigFile);
+				fileSystem.FileExists("Rules").Returns(true);
+				fileSystem.ReadStringFromFile("Rules").Returns(fakeRulesFile);
+				
+				loader = new Loader(log, fileSystem);
+			}
+
+			[Test]
+			[ExpectedException(typeof(ErrorCompilingRulesException))]
+			public void should_throw_loading_site_exception()
+			{
+				loader.LoadSiteData();
+			}
+
+			[Test]
+			public void should_contain_message_in_exception()
+			{
+				ErrorCompilingRulesException actual = null;
+				
+				try {
+					loader.LoadSiteData();
+				} catch (ErrorCompilingRulesException e) {
+					actual = e;
+				}
+				
+				actual.Message.ShouldBe("There was a problem compiling the Rules");
+			}
+
+			[Test]
+			public void should_contain_compilation_errors()
+			{
+				ErrorCompilingRulesException actual = null;
+				
+				try {
+					loader.LoadSiteData();
+				} catch (ErrorCompilingRulesException e) {
+					actual = e;
+				}
+
+				actual.Errors.Count.ShouldBeGreaterThan(0);
 			}
 		}
 	}

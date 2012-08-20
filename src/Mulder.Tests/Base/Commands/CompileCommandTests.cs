@@ -1,4 +1,5 @@
 using System;
+using System.CodeDom.Compiler;
 using System.Text;
 
 using NSubstitute;
@@ -9,6 +10,7 @@ using Mulder.Base;
 using Mulder.Base.Commands;
 using Mulder.Base.Compilation;
 using Mulder.Base.Domain;
+using Mulder.Base.Exceptions;
 using Mulder.Base.Loading;
 using Mulder.Base.Logging;
 
@@ -115,6 +117,58 @@ namespace Mulder.Tests.Base.Commands
 				ExitCode exitCode = compileCommand.ShowHelp(new string[] {});
 
 				exitCode.ShouldBe(ExitCode.Success);
+			}
+		}
+
+		[TestFixture]
+		public class when_load_site_data_throws_compiling_rules_exception
+		{
+			ILog log;
+			ILoader loader;
+			ICompiler compiler;
+			CompilerError compilerError;
+			CompileCommand compileCommand;
+
+			[SetUp]
+			public void SetUp()
+			{
+				log = Substitute.For<ILog>();
+				compiler = Substitute.For<ICompiler>();
+				loader = Substitute.For<ILoader>();
+
+				compilerError = new CompilerError("filename.cs", 50, 2, "error CS1525", "Unexpected symbol `}', expecting `;'");
+
+				var errorCollection = new CompilerErrorCollection();
+				errorCollection.Add(compilerError);
+
+				loader.LoadSiteData().Returns(x => { throw new ErrorCompilingRulesException(errorCollection); });
+
+				compileCommand = new CompileCommand(log, loader, compiler);
+			}
+
+			[Test]
+			public void should_log_message()
+			{
+				compileCommand.Execute(new string[] {});
+
+				log.Received().ErrorMessage("There was a problem compiling the Rules");
+			}
+
+			[Test]
+			public void should_log_error()
+			{
+				compileCommand.Execute(new string[] {});
+
+				int line = compilerError.Line - 28;
+				log.Received().ErrorMessage("   Line {0}: {1} {2}", line, compilerError.ErrorNumber, compilerError.ErrorText);
+			}
+
+			[Test]
+			public void should_return_error_exit_code()
+			{
+				ExitCode exitCode = compileCommand.Execute(new string[] {});
+				
+				exitCode.ShouldBe(ExitCode.Error);
 			}
 		}
 

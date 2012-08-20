@@ -7,6 +7,7 @@ using System.Reflection;
 
 using Mulder.Base.DataSources;
 using Mulder.Base.Domain;
+using Mulder.Base.Exceptions;
 using Mulder.Base.Extensions;
 using Mulder.Base.IO;
 using Mulder.Base.Logging;
@@ -172,7 +173,7 @@ namespace Mulder.Base.Loading
 					GenerateInMemory = true,
 					GenerateExecutable = false,
 					IncludeDebugInformation = false,
-					ReferencedAssemblies = { assembly.Location }
+					ReferencedAssemblies = { "System.dll", assembly.Location }
 				};
 				
 				string source = string.Format(GetRuleProxySource(assembly), ruleProxyPartial);
@@ -180,8 +181,7 @@ namespace Mulder.Base.Loading
 				var compilerResults = csharpCodeProvider.CompileAssemblyFromSource(compilerParameters, source);
 				
 				if (compilerResults.Errors.Count > 0) {
-					// TODO: Error Handling when compilation fails
-					return null;
+					throw new ErrorCompilingRulesException(compilerResults.Errors);
 				} else {
 					return compilerResults.CompiledAssembly;
 				}

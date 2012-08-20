@@ -1,4 +1,5 @@
 using System;
+using System.CodeDom.Compiler;
 using System.Globalization;
 using System.Diagnostics;
 using System.Text;
@@ -6,6 +7,7 @@ using System.Text;
 using Mulder.Base;
 using Mulder.Base.Compilation;
 using Mulder.Base.Domain;
+using Mulder.Base.Exceptions;
 using Mulder.Base.Loading;
 using Mulder.Base.Logging;
 
@@ -32,22 +34,36 @@ namespace Mulder.Base.Commands
 		
 		public ExitCode Execute(string[] arguments)
 		{
-			log.InfoMessage("Loading site data...");
-			
-			Site site = loader.LoadSiteData();
-			
-			log.InfoMessage("Compiling site...");
-			
-			var stopWatch = new Stopwatch();
-			stopWatch.Start();
-			
-			compiler.Compile(site);
-			
-			stopWatch.Stop();
-			
-			log.InfoMessage("Site compiled in {0}s.", stopWatch.Elapsed.TotalSeconds.ToString("0.000", CultureInfo.InvariantCulture));
-			
-			return ExitCode.Success;
+			try
+			{
+				log.InfoMessage("Loading site data...");
+				
+				Site site = loader.LoadSiteData();
+				
+				log.InfoMessage("Compiling site...");
+				
+				var stopWatch = new Stopwatch();
+				stopWatch.Start();
+				
+				compiler.Compile(site);
+				
+				stopWatch.Stop();
+				
+				log.InfoMessage("Site compiled in {0}s.", stopWatch.Elapsed.TotalSeconds.ToString("0.000", CultureInfo.InvariantCulture));
+
+				return ExitCode.Success;
+			}
+			catch (ErrorCompilingRulesException e) {
+				log.ErrorMessage(e.Message);
+
+				foreach(CompilerError ce in e.Errors)
+				{
+					int line = ce.Line - 28;
+					log.ErrorMessage("   Line {0}: {1} {2}", line, ce.ErrorNumber, ce.ErrorText);
+				}
+
+				return ExitCode.Error;
+			}
 		}
 
 		public ExitCode ShowHelp(string[] arguments)
