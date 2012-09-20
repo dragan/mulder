@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 
 using Mulder.Base.Domain;
@@ -91,12 +92,12 @@ namespace Mulder.Base.Compilation
 				IFilter filter = filterFactory.CreateFilter(filterName);
 				
 				string source = staticFile.GetLastSnapShot();
-				var arguments = new Dictionary<string, object> {
-					{ "configuration", site.Configuration as IDictionary<string, object> },
-					{ "item", staticFile.Item.Meta }
-				};
+
+				dynamic model = new ExpandoObject();
+				model.Configuration = site.Configuration;
+				model.Item = staticFile.Item.Meta;
 				
-				string result = filter.Execute(source, arguments);
+				string result = filter.Execute(source, model);
 				
 				staticFile.CreateSnapShot(result);
 			}
@@ -108,14 +109,15 @@ namespace Mulder.Base.Compilation
 				var layoutRule = site.GetLayoutRuleFor(staticFile.Layout);
 			
 				IFilter filter = filterFactory.CreateFilter(layoutRule.FilterName);
-				var arguments = new Dictionary<string, object> {
-					{ "configuration", site.Configuration as IDictionary<string, object> },
-					{ "layout", staticFile.Layout.Meta },
-					{ "item", staticFile.Item.Meta },
-					{ "content", staticFile.GetLastSnapShot() }
-				};
+
+
+				dynamic model = new ExpandoObject();
+				model.Configuration = site.Configuration;
+				model.Layout = staticFile.Layout.Meta;
+				model.Item = staticFile.Item.Meta;
+				model.Content = staticFile.GetLastSnapShot();
 			
-				string result = filter.Execute(staticFile.Layout.Content, arguments);
+				string result = filter.Execute(staticFile.Layout.Content, model);
 			
 				staticFile.CreateSnapShot(result);
 			}

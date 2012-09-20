@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 
 using NSubstitute;
@@ -21,21 +22,17 @@ namespace Mulder.Tests.Base.Filters
 			{
 				string source = "@color: #4D926F;#header {color: @color;}h2 {color: @color;}";
 				string expected = "#header{color:#4d926f}h2{color:#4d926f}";
-				
-				var arguments = new Dictionary<string, object> {
-					{
-						"item",
-						new Dictionary<string, object> {
-							{ "filename", Path.Combine("a", "b", "c.less") }
-						}
-					}
+
+				dynamic model = new ExpandoObject();
+				model.Item = new Dictionary<string, object> {
+					{ "filename", Path.Combine("a", "b", "c.less") }
 				};
 				
 				var fileSystem = Substitute.For<IFileSystem>();
 				
 				var lessFilter = new LessFilter(fileSystem);
 				
-				string result = lessFilter.Execute(source, arguments);
+				string result = lessFilter.Execute(source, model);
 				
 				result.ShouldBe(expected);
 			}
@@ -47,7 +44,7 @@ namespace Mulder.Tests.Base.Filters
 			string dependencyFilename;
 			string source;
 			string expected;
-			IDictionary<string, object> arguments;
+			dynamic model;
 			IFileSystem fileSystem;
 			LessFilter lessFilter;
 			
@@ -63,13 +60,9 @@ namespace Mulder.Tests.Base.Filters
 				source = "@import \"variables.less\";#header {color: @color;}h2 {color: @color;}";
 				expected = "#header{color:#4d926f}h2{color:#4d926f}";
 				
-				arguments = new Dictionary<string, object> {
-					{
-						"item",
-						new Dictionary<string, object> {
-							{ "filename", Path.Combine("a", "b", "c.less") }
-						}
-					}
+				model = new ExpandoObject();
+				model.Item = new Dictionary<string, object> {
+					{ "filename", Path.Combine("a", "b", "c.less") }
 				};
 				
 				fileSystem = Substitute.For<IFileSystem>();
@@ -84,7 +77,7 @@ namespace Mulder.Tests.Base.Filters
 			[Test]
 			public void should_call_file_exists_on_file_system()
 			{
-				lessFilter.Execute(source, arguments);
+				lessFilter.Execute(source, model);
 				
 				fileSystem.Received().FileExists(dependencyFilename);
 			}
@@ -92,7 +85,7 @@ namespace Mulder.Tests.Base.Filters
 			[Test]
 			public void should_call_read_string_from_file_on_file_system()
 			{
-				lessFilter.Execute(source, arguments);
+				lessFilter.Execute(source, model);
 				
 				fileSystem.Received().ReadStringFromFile(dependencyFilename);
 			}
@@ -100,7 +93,7 @@ namespace Mulder.Tests.Base.Filters
 			[Test]
 			public void should_receive_expected_transformed_result()
 			{
-				string result = lessFilter.Execute(source, arguments);
+				string result = lessFilter.Execute(source, model);
 				
 				result.ShouldBe(expected);
 			}

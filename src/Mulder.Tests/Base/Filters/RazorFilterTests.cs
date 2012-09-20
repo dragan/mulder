@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Dynamic;
 
 using NUnit.Framework;
 using Shouldly;
@@ -20,7 +20,10 @@ namespace Mulder.Tests.Base.Filters
 				
 				var razorFilter = new RazorFilter();
 
-				string result = razorFilter.Execute("Hi @Model[\"name\"]!", new Dictionary<string, object> { { "name", "Agent Mulder" } });
+				dynamic model = new ExpandoObject();
+				model.Name = "Agent Mulder";
+
+				string result = razorFilter.Execute("Hi @Model.Name!", model);
 				
 				result.ShouldBe(expected);
 			}

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 
 using DotLiquid;
@@ -13,10 +14,12 @@ namespace Mulder.Base.Filters
 		{
 		}
 		
-		public string Execute(string source, IDictionary<string, object> arguments)
+		public string Execute(string source, dynamic model)
 		{
-			string includesPath = GetIncludesPath(arguments);
-			Hash data = Hash.FromDictionary(arguments);
+			IDictionary<string, object> modelDictionary = model as IDictionary<string, object>;
+
+			string includesPath = GetIncludesPath(modelDictionary);
+			Hash data = Hash.FromDictionary(modelDictionary);
 			Template template = Template.Parse(source);
 			Template.FileSystem = new Includes(includesPath);
 			string output = template.Render(data);
@@ -24,12 +27,12 @@ namespace Mulder.Base.Filters
 			return output;
 		}
 		
-		string GetIncludesPath(IDictionary<string, object> arguments)
+		string GetIncludesPath(IDictionary<string, object> modelDictionary)
 		{
 			string includesPath = string.Empty;
 			
-			if (arguments.ContainsKey("layout")) {
-				var layoutMeta = arguments["layout"] as IDictionary<string, object>;
+			if (modelDictionary.ContainsKey("layout")) {
+				var layoutMeta = modelDictionary["layout"] as IDictionary<string, object>;
 				
 				if (layoutMeta.ContainsKey("includes_path"))
 					includesPath = layoutMeta["includes_path"].ToString();

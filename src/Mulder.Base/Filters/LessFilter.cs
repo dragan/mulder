@@ -21,9 +21,9 @@ namespace Mulder.Base.Filters
 			this.fileSystem = fileSystem;
 		}
 		
-		public string Execute(string source, IDictionary<string, object> arguments)
+		public string Execute(string source, dynamic model)
 		{
-			var item = arguments["item"] as IDictionary<string, object>;
+			var item = model.Item as IDictionary<string, object>;
 			string path = Path.GetDirectoryName(item["filename"].ToString());
 			
 			string result = Transform(source, path);

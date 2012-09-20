@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 using RazorEngine;
 
@@ -11,9 +10,9 @@ namespace Mulder.Base.Filters
 		{
 		}
 
-		public string Execute(string source, IDictionary<string, object> arguments)
+		public string Execute(string source, dynamic model)
 		{
-			return Razor.Parse(source, arguments);
+			return Razor.Parse(source, model);
 		}
 	}
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 using MarkdownSharp;
 
@@ -11,7 +10,7 @@ namespace Mulder.Base.Filters
 		{
 		}
 		
-		public string Execute(string source, IDictionary<string, object> arguments)
+		public string Execute(string source, dynamic model)
 		{
 			var markdown = new Markdown();
 			string output = markdown.Transform(source);
