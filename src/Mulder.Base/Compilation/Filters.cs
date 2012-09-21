@@ -6,6 +6,7 @@ namespace Mulder.Base.Compilation
 	{
 		LIQUID,
 		MARKDOWN,
-		LESS
+		LESS,
+		RAZOR
 	}
 }

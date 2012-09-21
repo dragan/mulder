@@ -25,6 +25,8 @@ namespace Mulder.Base.Compilation
 				return new MarkdownFilter();
 			case Filters.LESS:
 				return new LessFilter(fileSystem);
+			case Filters.RAZOR:
+				return new RazorFilter();
 			default:
 				return null;
 			}
