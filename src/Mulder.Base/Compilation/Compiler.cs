@@ -93,11 +93,12 @@ namespace Mulder.Base.Compilation
 				
 				string source = staticFile.GetLastSnapShot();
 
-				dynamic model = new ExpandoObject();
-				model.Configuration = site.Configuration;
-				model.Item = staticFile.Item.Meta;
+				var filterContext = new FilterContext {
+					Configuration = site.Configuration,
+					Item = staticFile.Item.Meta
+				};
 				
-				string result = filter.Execute(source, model);
+				string result = filter.Execute(source, filterContext);
 				
 				staticFile.CreateSnapShot(result);
 			}
@@ -110,15 +111,15 @@ namespace Mulder.Base.Compilation
 			
 				IFilter filter = filterFactory.CreateFilter(layoutRule.FilterName);
 
+				var filterContext = new FilterContext {
+					Configuration = site.Configuration,
+					Layout = staticFile.Layout.Meta,
+					Item = staticFile.Item.Meta,
+					Content = staticFile.GetLastSnapShot()
+				};
 
-				dynamic model = new ExpandoObject();
-				model.Configuration = site.Configuration;
-				model.Layout = staticFile.Layout.Meta;
-				model.Item = staticFile.Item.Meta;
-				model.Content = staticFile.GetLastSnapShot();
-			
-				string result = filter.Execute(staticFile.Layout.Content, model);
-			
+				string result = filter.Execute(staticFile.Layout.Content, filterContext);
+				
 				staticFile.CreateSnapShot(result);
 			}
 		}

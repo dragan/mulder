@@ -71,6 +71,7 @@
     <Compile Include="Base\Filters\LessFilterTests.cs" />
     <Compile Include="Base\Domain\ConfigurationTests.cs" />
     <Compile Include="Base\Filters\RazorFilterTests.cs" />
+    <Compile Include="Base\Extensions\DictionaryExtensionsTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />

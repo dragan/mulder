@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
 
 using NUnit.Framework;
 using Shouldly;
 
+using Mulder.Base.Compilation;
 using Mulder.Base.Filters;
 
 namespace Mulder.Tests.Base.Filters
@@ -20,10 +22,12 @@ namespace Mulder.Tests.Base.Filters
 				
 				var razorFilter = new RazorFilter();
 
-				dynamic model = new ExpandoObject();
-				model.Name = "Agent Mulder";
+				dynamic item = new ExpandoObject();
+				item.Name = "Agent Mulder";
 
-				string result = razorFilter.Execute("Hi @Model.Name!", model);
+				string result = razorFilter.Execute("Hi @Model.Item.Name!", new FilterContext {
+					Item = item
+				});
 				
 				result.ShouldBe(expected);
 			}

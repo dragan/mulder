@@ -114,7 +114,7 @@ namespace Mulder.Tests.Base.Compilation
 				
 				var staticFiles = site.Items.SelectMany(item => item.StaticFiles);
 				foreach (StaticFile staticFile in staticFiles) {
-					filter.Received().Execute("item-content", Arg.Any<IDictionary<string, object>>());
+					filter.Received().Execute("item-content", Arg.Any<FilterContext>());
 				}
 			}
 			
@@ -133,7 +133,7 @@ namespace Mulder.Tests.Base.Compilation
 				
 				var staticFiles = site.Items.SelectMany(item => item.StaticFiles);
 				foreach (StaticFile staticFile in staticFiles) {
-					filter.Received().Execute("layout-content", Arg.Any<IDictionary<string, object>>());
+					filter.Received().Execute("layout-content", Arg.Any<FilterContext>());
 				}
 			}
 			

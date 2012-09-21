@@ -95,6 +95,8 @@
     <Compile Include="Options.cs" />
     <Compile Include="Exceptions\LoadingSiteException.cs" />
     <Compile Include="Filters\RazorFilter.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Compilation\FilterContext.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />

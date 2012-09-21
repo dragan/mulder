@@ -8,6 +8,7 @@ using dotless.Core.Input;
 using dotless.Core.Parser;
 using dotless.Core.Stylizers;
 
+using Mulder.Base.Compilation;
 using Mulder.Base.IO;
 
 namespace Mulder.Base.Filters
@@ -21,9 +22,9 @@ namespace Mulder.Base.Filters
 			this.fileSystem = fileSystem;
 		}
 		
-		public string Execute(string source, dynamic model)
+		public string Execute(string source, FilterContext filterContext)
 		{
-			var item = model.Item as IDictionary<string, object>;
+			var item = filterContext.Item as IDictionary<string, object>;
 			string path = Path.GetDirectoryName(item["filename"].ToString());
 			
 			string result = Transform(source, path);

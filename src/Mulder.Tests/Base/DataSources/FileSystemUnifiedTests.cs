@@ -286,9 +286,9 @@ Item Content");
 						false,
 						"test 1",
 						new Dictionary<string, object> {
-							{ "filename", Path.Combine("content", "index.html") },
-							{ "meta_filename", "" },
-							{ "extension", ".html" },
+							{ "Filename", Path.Combine("content", "index.html") },
+							{ "MetaFilename", "" },
+							{ "Extension", ".html" },
 							{ "num", "1" }
 						},
 						expectedModificationTime),
@@ -296,9 +296,9 @@ Item Content");
 						false,
 						"test 2",
 						new Dictionary<string, object> {
-							{ "filename", Path.Combine("content", "a.html") },
-							{ "meta_filename", "" },
-							{ "extension", ".html" },
+							{ "Filename", Path.Combine("content", "a.html") },
+							{ "MetaFilename", "" },
+							{ "Extension", ".html" },
 							{ "num", "2" }
 						},
 						expectedModificationTime),
@@ -306,9 +306,9 @@ Item Content");
 						false,
 						"test 3",
 						new Dictionary<string, object> {
-							{ "filename", Path.Combine("content", "a", "b.html") },
-							{ "meta_filename", "" },
-							{ "extension", ".html" },
+							{ "Filename", Path.Combine("content", "a", "b.html") },
+							{ "MetaFilename", "" },
+							{ "Extension", ".html" },
 							{ "num", "3" }
 						},
 						expectedModificationTime),
@@ -316,9 +316,9 @@ Item Content");
 						false,
 						"test 4",
 						new Dictionary<string, object> {
-							{ "filename", Path.Combine("content", "a", "b", "c.html") },
-							{ "meta_filename", Path.Combine("content", "a", "b", "c.yaml") },
-							{ "extension", ".html" },
+							{ "Filename", Path.Combine("content", "a", "b", "c.html") },
+							{ "MetaFilename", Path.Combine("content", "a", "b", "c.yaml") },
+							{ "Extension", ".html" },
 							{ "num", "4" }
 						},
 						expectedModificationTime),
@@ -326,9 +326,9 @@ Item Content");
 						true,
 						"",
 						new Dictionary<string, object> {
-							{ "filename", Path.Combine("content", "binary.dat") },
-							{ "meta_filename", "" },
-							{ "extension", ".dat" }
+							{ "Filename", Path.Combine("content", "binary.dat") },
+							{ "MetaFilename", "" },
+							{ "Extension", ".dat" }
 						},
 						expectedModificationTime)
 				};
@@ -390,18 +390,18 @@ Item Content");
 					new Layout("/a/",
 						"test 1",
 						new Dictionary<string, object> {
-							{ "filename", Path.Combine("layouts", "a.html") },
-							{ "meta_filename", "" },
-							{ "extension", ".html" },
+							{ "Filename", Path.Combine("layouts", "a.html") },
+							{ "MetaFilename", "" },
+							{ "Extension", ".html" },
 							{ "num", "1" }
 						},
 						expectedModificationTime),
 					new Layout("/b/",
 						"test 2",
 						new Dictionary<string, object> {
-							{ "filename", Path.Combine("layouts", "b.html") },
-							{ "meta_filename", Path.Combine("layouts", "b.yaml") },
-							{ "extension", ".html" },
+							{ "Filename", Path.Combine("layouts", "b.html") },
+							{ "MetaFilename", Path.Combine("layouts", "b.yaml") },
+							{ "Extension", ".html" },
 							{ "num", "2" }
 						},
 						expectedModificationTime)

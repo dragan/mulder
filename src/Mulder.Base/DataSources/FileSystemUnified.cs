@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -153,13 +154,12 @@ namespace Mulder.Base.DataSources
 				bool isBinary = IsBinary(contentFileName);
 				
 				ParsedFileData parsedFileData = !isBinary
-					? ParseFiles(contentFileName, metaFileName) : new ParsedFileData { Content = "", Meta = new Dictionary<string, object>() };
+					? ParseFiles(contentFileName, metaFileName) : new ParsedFileData { Content = "", Meta = new ExpandoObject() };
 				
-				IDictionary<string, object> meta = new Dictionary<string, object>(parsedFileData.Meta) {
-					{ "filename", contentFileName },
-					{ "meta_filename", metaFileName},
-					{ "extension", contentFileExtension }
-				};
+				dynamic meta = parsedFileData.Meta;
+				meta.Filename = contentFileName;
+				meta.MetaFilename = metaFileName;
+				meta.Extension = contentFileExtension;
 				
 				string contentFileNameWithoutPath = contentFileName.RemovePathFromFileName(path);
 				string identifier = GetIdentifierForFileName(contentFileNameWithoutPath);
@@ -234,17 +234,18 @@ namespace Mulder.Base.DataSources
 		
 		ParsedFileData ParseFiles(string rawContentFileName, string metaFileName)
 		{
-			IDictionary<string, object> meta = null;
+			dynamic meta = null;
 			string fileContent = string.Empty;
 			
 			// If we have a stand alone meta file
 			if (!string.IsNullOrEmpty(metaFileName)) {
 				fileContent = !string.IsNullOrEmpty(rawContentFileName) ? fileSystem.ReadStringFromFile(rawContentFileName) : string.Empty;
-				meta = fileSystem.ReadStringFromFile(metaFileName).DeserializeYaml()[0] as IDictionary<string, object>;
+				var yaml = fileSystem.ReadStringFromFile(metaFileName).DeserializeYaml()[0] as IDictionary<string, object>;
+				meta = yaml.ToExpando();
 			}
 			else {
 				string rawFileContent = !string.IsNullOrEmpty(rawContentFileName) ? fileSystem.ReadStringFromFile(rawContentFileName) : string.Empty;
-				meta = rawFileContent.DeserializeYamlHeader();
+				meta = rawFileContent.DeserializeYamlHeader().ToExpando();
 				fileContent = rawFileContent.ExcludeYamlHeader();
 			}
 			
@@ -301,14 +302,14 @@ namespace Mulder.Base.DataSources
 			public string Identifier { get; set; }
 			public bool IsBinary { get; set; }
 			public string Content { get; set; }
-			public IDictionary<string, object> Meta { get; set; }
+			public dynamic Meta { get; set; }
 			public DateTime ModificationTime { get; set; }
 		}
 		
 		class ParsedFileData
 		{
 			public string Content { get; set; }
-			public IDictionary<string, object> Meta { get; set; }
+			public dynamic Meta { get; set; }
 		}
 	}
 }

@@ -1,10 +1,13 @@
 using Microsoft.CSharp.RuntimeBinder;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 using RazorEngine;
 using RazorEngine.Configuration;
 using RazorEngine.Templating;
+
+using Mulder.Base.Compilation;
 
 namespace Mulder.Base.Filters
 {
@@ -14,9 +17,9 @@ namespace Mulder.Base.Filters
 		{
 		}
 
-		public string Execute(string source, dynamic model)
+		public string Execute(string source, FilterContext filterContext)
 		{
-			string includesPath = GetIncludesPath(model);
+			string includesPath = GetIncludesPath(filterContext.Layout);
 
 			var serviceConfig = new TemplateServiceConfiguration {
 				Resolver = new IncludesResolver(includesPath)
@@ -24,21 +27,19 @@ namespace Mulder.Base.Filters
 
 			Razor.SetTemplateService(new TemplateService(serviceConfig));
 
+			dynamic model = filterContext;
+
 			return Razor.Parse(source, model);
 		}
 
-		string GetIncludesPath(dynamic model)
+		string GetIncludesPath(IDictionary<string, object> layout)
 		{
 			string includesPath = string.Empty;
 
-			try {
-				var layoutMeta = model.Layout;
-				
-				if (layoutMeta.ContainsKey("includes_path"))
-					includesPath = layoutMeta["includes_path"].ToString();
-			}
-			catch (RuntimeBinderException e) {
-				// Just ignore the exception if it doesn't exist
+			if (layout != null) {
+				if (layout.ContainsKey("includes_path")) {
+					includesPath = layout["includes_path"].ToString();
+				}
 			}
 			
 			return includesPath;

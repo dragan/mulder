@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Shouldly;
 
+using Mulder.Base.Compilation;
 using Mulder.Base.Filters;
 
 namespace Mulder.Tests.Base.Filters
@@ -20,7 +21,11 @@ namespace Mulder.Tests.Base.Filters
 				
 				var liquidFilter = new LiquidFilter();
 				
-				string result = liquidFilter.Execute("Hi {{name}}!", new Dictionary<string, object> { { "name", "Agent Mulder" } });
+				string result = liquidFilter.Execute("Hi {{item.name}}!", new FilterContext {
+					Item = new Dictionary<string, object> {
+						{ "name", "Agent Mulder" }
+					}
+				});
 				
 				result.ShouldBe(expected);
 			}

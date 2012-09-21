@@ -8,7 +8,7 @@ namespace Mulder.Base.Domain
 		readonly string identifier;
 		readonly bool isBinary;
 		readonly string content;
-		readonly IDictionary<string, object> meta;
+		readonly dynamic meta;
 		readonly DateTime modificationTime;
 		readonly List<Item> children;
 		readonly List<StaticFile> staticFiles;
@@ -16,13 +16,13 @@ namespace Mulder.Base.Domain
 		public string Identifier { get { return identifier; } }
 		public bool IsBinary { get { return isBinary; } }
 		public string Content { get { return content; } }
-		public IDictionary<string, object> Meta { get { return meta; } }
+		public dynamic Meta { get { return meta; } }
 		public DateTime ModificationTime { get { return modificationTime; } }
 		public Item Parent { get; set; }
 		public IEnumerable<Item> Children { get { return children; } }
 		public IEnumerable<StaticFile> StaticFiles { get { return staticFiles; } }
 		
-		public Item(string identifier, bool isBinary, string content, IDictionary<string, object> meta, DateTime modificationTime)
+		public Item(string identifier, bool isBinary, string content, dynamic meta, DateTime modificationTime)
 		{
 			this.identifier = identifier;
 			this.isBinary = isBinary;
@@ -53,7 +53,7 @@ namespace Mulder.Base.Domain
 			stringBuilder.AppendLine("IsBinary: \"" + isBinary + "\"");
 			stringBuilder.AppendLine("Content: \"" + content + "\"");
 			stringBuilder.AppendLine("Meta:");
-			foreach (var kvp in meta) {
+			foreach (var kvp in meta as IDictionary<string, object>) {
 				stringBuilder.AppendLine("  " + kvp.Key + ": \"" + kvp.Value.ToString() + "\"");
 			}
 			
@@ -88,9 +88,11 @@ namespace Mulder.Base.Domain
 				return false;
 			
 			bool metasAreEqual = true;
-			if (meta.Count == other.meta.Count) {
-				foreach (var kvp in meta) {
-					if (other.meta[kvp.Key].ToString() == kvp.Value.ToString())
+			var metaDictionary = meta as IDictionary<string, object>;
+			var otherMetaDictionary = other.meta as IDictionary<string, object>;
+			if (metaDictionary.Count == otherMetaDictionary.Count) {
+				foreach (var kvp in metaDictionary) {
+					if (otherMetaDictionary[kvp.Key].ToString() == kvp.Value.ToString())
 						continue;
 				
 					metasAreEqual = false;
