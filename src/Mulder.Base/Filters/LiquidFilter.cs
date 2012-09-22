@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 
 using DotLiquid;
 using DotLiquid.FileSystems;
+
+using Mulder.Base.Compilation;
 
 namespace Mulder.Base.Filters
 {
@@ -13,26 +16,32 @@ namespace Mulder.Base.Filters
 		{
 		}
 		
-		public string Execute(string source, IDictionary<string, object> arguments)
+		public string Execute(string source, FilterContext filterContext)
 		{
-			string includesPath = GetIncludesPath(arguments);
-			Hash data = Hash.FromDictionary(arguments);
+			string includesPath = GetIncludesPath(filterContext.Layout);
+
+			var model = new {
+				Configuration = filterContext.Configuration,
+				Layout = new DynamicDrop(filterContext.Layout),
+				Item = new DynamicDrop(filterContext.Item),
+				Content = filterContext.Content
+			};
+
+			Hash hash = Hash.FromAnonymousObject(model);
 			Template template = Template.Parse(source);
 			Template.FileSystem = new Includes(includesPath);
-			string output = template.Render(data);
+			string output = template.Render(hash);
 			
 			return output;
 		}
 		
-		string GetIncludesPath(IDictionary<string, object> arguments)
+		string GetIncludesPath(IDictionary<string, object> layout)
 		{
 			string includesPath = string.Empty;
-			
-			if (arguments.ContainsKey("layout")) {
-				var layoutMeta = arguments["layout"] as IDictionary<string, object>;
-				
-				if (layoutMeta.ContainsKey("includes_path"))
-					includesPath = layoutMeta["includes_path"].ToString();
+
+			if (layout != null) {
+				if (layout.ContainsKey("includes_path"))
+					includesPath = layout["includes_path"].ToString();
 			}
 			
 			return includesPath;
@@ -56,6 +65,59 @@ namespace Mulder.Base.Filters
 				return File.ReadAllText(includePath);
 			
 			return string.Empty;
+		}
+	}
+
+	class DynamicDrop : Drop
+	{
+		readonly dynamic model;
+
+		public DynamicDrop(dynamic model)
+		{
+			this.model = GetValidModelType(model);
+		}
+
+		public override object BeforeMethod(string propertyName)
+		{
+			if (model == null)
+				return null;
+
+			if (String.IsNullOrEmpty(propertyName))
+				return null;
+
+			Type modelType = this.model.GetType();
+
+			object value = null;
+			if (modelType.Equals(typeof(Dictionary<string, object>))) {
+				value = GetExpandoObjectValue(propertyName);
+			}
+			else {
+				value = GetPropertyValue(propertyName);
+			}
+
+			return value;
+		}
+
+		object GetExpandoObjectValue(string propertyName)
+		{
+			return (!model.ContainsKey(propertyName)) ? null : model[propertyName];
+		}
+
+		object GetPropertyValue(string propertyName)
+		{
+			var property = model.GetType().GetProperty(propertyName);
+
+			return (property == null) ? null : property.GetValue(model, null);
+		}
+
+		static dynamic GetValidModelType(dynamic model)
+		{
+			if (model == null)
+				return null;
+
+			return model.GetType().Equals(typeof(ExpandoObject))
+				? new Dictionary<string, object>(model, StringComparer.InvariantCultureIgnoreCase)
+				: model;
 		}
 	}
 }

@@ -7,7 +7,7 @@ namespace Mulder.Base.Domain
 	{
 		string Identifier { get; }
 		string Content { get; }
-		IDictionary<string, object> Meta { get; }
+		dynamic Meta { get; }
 		DateTime ModificationTime { get; }
 	}
 }

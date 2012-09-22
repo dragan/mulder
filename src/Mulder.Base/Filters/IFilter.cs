@@ -1,10 +1,11 @@
 using System;
-using System.Collections.Generic;
+
+using Mulder.Base.Compilation;
 
 namespace Mulder.Base.Filters
 {
 	public interface IFilter
 	{
-		string Execute(string source, IDictionary<string, object> arguments);
+		string Execute(string source, FilterContext filterContext);
 	}
 }

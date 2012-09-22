@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Shouldly;
 
+using Mulder.Base.Compilation;
 using Mulder.Base.Filters;
 
 namespace Mulder.Tests.Base.Filters
@@ -20,7 +21,7 @@ namespace Mulder.Tests.Base.Filters
 				
 				var markdownFilter = new MarkdownFilter();
 				
-				string result = markdownFilter.Execute("### The Truth Is Out There", new Dictionary<string, object>());
+				string result = markdownFilter.Execute("### The Truth Is Out There", new FilterContext());
 				
 				result.ShouldContain(expected);
 			}

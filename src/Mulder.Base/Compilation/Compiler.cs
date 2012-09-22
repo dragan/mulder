@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 
 using Mulder.Base.Domain;
@@ -91,12 +92,13 @@ namespace Mulder.Base.Compilation
 				IFilter filter = filterFactory.CreateFilter(filterName);
 				
 				string source = staticFile.GetLastSnapShot();
-				var arguments = new Dictionary<string, object> {
-					{ "configuration", site.Configuration as IDictionary<string, object> },
-					{ "item", staticFile.Item.Meta }
+
+				var filterContext = new FilterContext {
+					Configuration = site.Configuration,
+					Item = staticFile.Item.Meta
 				};
 				
-				string result = filter.Execute(source, arguments);
+				string result = filter.Execute(source, filterContext);
 				
 				staticFile.CreateSnapShot(result);
 			}
@@ -108,15 +110,16 @@ namespace Mulder.Base.Compilation
 				var layoutRule = site.GetLayoutRuleFor(staticFile.Layout);
 			
 				IFilter filter = filterFactory.CreateFilter(layoutRule.FilterName);
-				var arguments = new Dictionary<string, object> {
-					{ "configuration", site.Configuration as IDictionary<string, object> },
-					{ "layout", staticFile.Layout.Meta },
-					{ "item", staticFile.Item.Meta },
-					{ "content", staticFile.GetLastSnapShot() }
+
+				var filterContext = new FilterContext {
+					Configuration = site.Configuration,
+					Layout = staticFile.Layout.Meta,
+					Item = staticFile.Item.Meta,
+					Content = staticFile.GetLastSnapShot()
 				};
-			
-				string result = filter.Execute(staticFile.Layout.Content, arguments);
-			
+
+				string result = filter.Execute(staticFile.Layout.Content, filterContext);
+				
 				staticFile.CreateSnapShot(result);
 			}
 		}

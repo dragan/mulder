@@ -7,15 +7,15 @@ namespace Mulder.Base.Domain
 	{
 		readonly string identifier;
 		readonly string content;
-		readonly IDictionary<string, object> meta;
+		readonly dynamic meta;
 		readonly DateTime modificationTime;
 		
 		public string Identifier { get { return identifier; } }
 		public string Content { get { return content; } }
-		public IDictionary<string, object> Meta { get { return meta; } }
+		public dynamic Meta { get { return meta; } }
 		public DateTime ModificationTime { get { return modificationTime; } }
 		
-		public Layout(string identifier, string content, IDictionary<string, object> meta, DateTime modificationTime)
+		public Layout(string identifier, string content, dynamic meta, DateTime modificationTime)
 		{
 			this.identifier = identifier;
 			this.content = content;
@@ -31,7 +31,7 @@ namespace Mulder.Base.Domain
 			stringBuilder.AppendLine("Identifier: \"" + identifier + "\"");
 			stringBuilder.AppendLine("Content: \"" + content + "\"");
 			stringBuilder.AppendLine("Meta:");
-			foreach (var kvp in meta) {
+			foreach (var kvp in meta as IDictionary<string, object>) {
 				stringBuilder.AppendLine("  " + kvp.Key + ": \"" + kvp.Value.ToString() + "\"");
 			}
 			
@@ -64,9 +64,11 @@ namespace Mulder.Base.Domain
 				return false;
 			
 			bool metasAreEqual = true;
-			if (meta.Count == other.meta.Count) {
-				foreach (var kvp in meta) {
-					if (other.meta[kvp.Key].ToString() == kvp.Value.ToString())
+			var metaDictionary = meta as IDictionary<string, object>;
+			var otherMetaDictionary = other.meta as IDictionary<string, object>;
+			if (metaDictionary.Count == otherMetaDictionary.Count) {
+				foreach (var kvp in metaDictionary) {
+					if (otherMetaDictionary[kvp.Key].ToString() == kvp.Value.ToString())
 						continue;
 				
 					metasAreEqual = false;
