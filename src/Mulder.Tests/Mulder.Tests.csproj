@@ -42,6 +42,7 @@
     <Reference Include="NSubstitute">
       <HintPath>..\..\packages\NSubstitute.1.4.0.0\lib\NET40\NSubstitute.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
