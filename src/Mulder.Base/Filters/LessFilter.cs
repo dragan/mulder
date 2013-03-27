@@ -24,10 +24,9 @@ namespace Mulder.Base.Filters
 		
 		public string Execute(string source, FilterContext filterContext)
 		{
-			var item = filterContext.Item as IDictionary<string, object>;
-			string path = Path.GetDirectoryName(item["filename"].ToString());
+			string path = Path.GetDirectoryName(filterContext.Item.Filename);
 			
-			string result = Transform(source, path);
+            string result = Transform(source, path);
 			
 			return result;
 		}

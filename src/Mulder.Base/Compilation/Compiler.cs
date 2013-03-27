@@ -77,7 +77,7 @@ namespace Mulder.Base.Compilation
 				ExecuteLayoutFilter(staticFile, site);
 				
 				if (staticFile.Item.IsBinary) {
-					fileSystem.Copy(staticFile.Item.Meta["filename"].ToString(), staticFile.Path);
+					fileSystem.Copy(staticFile.Item.Meta.Filename, staticFile.Path);
 				} else {
 					fileSystem.WriteStringToFile(staticFile.Path, staticFile.GetLastSnapShot());
 				}

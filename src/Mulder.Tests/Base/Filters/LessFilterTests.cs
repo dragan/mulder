@@ -24,10 +24,11 @@ namespace Mulder.Tests.Base.Filters
 				string source = "@color: #4D926F;#header {color: @color;}h2 {color: @color;}";
 				string expected = "#header{color:#4d926f}h2{color:#4d926f}";
 
+                dynamic item = new ExpandoObject();
+                item.Filename = Path.Combine("a", "b", "c.less");
+
 				var filterContext = new FilterContext {
-					Item = new Dictionary<string, object> {
-						{ "filename", Path.Combine("a", "b", "c.less") }
-					}
+                    Item = item
 				};
 				
 				var fileSystem = Substitute.For<IFileSystem>();
@@ -61,11 +62,12 @@ namespace Mulder.Tests.Base.Filters
 				
 				source = "@import \"variables.less\";#header {color: @color;}h2 {color: @color;}";
 				expected = "#header{color:#4d926f}h2{color:#4d926f}";
+
+                dynamic item = new ExpandoObject();
+                item.Filename = Path.Combine("a", "b", "c.less");
 				
 				filterContext = new FilterContext {
-					Item = new Dictionary<string, object> {
-						{ "filename", Path.Combine("a", "b", "c.less") }
-					}
+                    Item = item
 				};
 				
 				fileSystem = Substitute.For<IFileSystem>();
